@@ -1,4 +1,4 @@
-var GITHUB_REPOSITORIES_URL = "https://api.github.com/users/DTasev/repos";
+var GITHUB_REPOSITORIES_URL = "https://api.github.com/user/repos?visibility=all";
 var GITHUB_REPO_BASE_URL = "https://api.github.com/repos/";
 function makeRepositoryIssuesUrl(hash) {
     return "https://api.github.com/repos/" + hash.substring(1) + "/issues";
@@ -6,7 +6,9 @@ function makeRepositoryIssuesUrl(hash) {
 
 function github_GET(url, callback) {
     var request = new XMLHttpRequest();
+    var auth_basic = window.btoa($("#username input").val() + ":" + $("#api-key input").val());
     request.open("GET", url, true);
+    request.setRequestHeader("Authorization", "Basic " + auth_basic);
     request.onreadystatechange = function () {
         if (request.readyState === XMLHttpRequest.DONE && request.status === 200) {
             callback(JSON.parse(request.responseText));
@@ -30,6 +32,10 @@ function makeTableRows(json_data, data_parsing_func) {
         newhtml += "<tr><td>" + data_parsing_func(entry) + "</td></tr>";
     }
     return newhtml;
+}
+
+function makeIssueInputField() {
+    return "<tr><td><input/></td></tr>" # TODO
 }
 
 function showRepositories(repositories) {
