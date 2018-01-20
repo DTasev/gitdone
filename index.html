@@ -12,19 +12,20 @@
 </head>
 
 <body class="w3-light-grey w3-content" style="max-width: 1600px">
-    <section class="container">
-        <form action="#" method="post">
+    <form action="#" method="post">
         <div id="username">
-            <input type="text" placeholder="Username" tabindex="-1" value="DTasev" name="username" />
+            <input type="text" placeholder="Username" value="DTasev" name="username" />
         </div>
         <div id="api-key">
-        <input type="password" placeholder="API Key" tabindex="-1" value="" name="api-key" />
+            <input type="password" placeholder="API Key" value="" name="api-key" />
+            <a href="https://github.com/settings/tokens/new" target="_blank">Get API token</a>
         </div>
         <button type="submit">Force browser save credentials</button>
-        </form>
+    </form>
+    <section class="container">
         
         <div id="repo-filter">
-            <input type="text" placeholder="Filter repository names" tabindex="-1" />
+            <input type="text" placeholder="Filter repository names" />
         </div>
         <div class="one">
             <table>
