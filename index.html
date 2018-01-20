@@ -17,16 +17,17 @@
             <input type="text" placeholder="Username" value="DTasev" name="username" />
         </div>
         <div id="api-key">
-            <input type="password" placeholder="API Key" value="" name="api-key" />
+            <input type="password" placeholder="API Key" value="44c7df33502dab3363a039c443ace7754091f9ff" name="api-key" />
             <a href="https://github.com/settings/tokens/new" target="_blank">Get API token</a>
         </div>
-        <button type="submit">Force browser save credentials</button>
     </form>
     <section class="container">
-        
-        <div id="repo-filter">
-            <input type="text" placeholder="Filter repository names" />
-        </div>
+        <section>
+            <div id="repo-filter" class="inline-block">
+                <input type="text" placeholder="Filter repository names" />
+            </div>
+            <div id="error-message" class="inline-block"></div>
+        </section>
         <div class="one">
             <table>
                 <thead>

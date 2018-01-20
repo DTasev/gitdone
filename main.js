@@ -13,6 +13,13 @@ function github_GET(url, callback) {
     request.onreadystatechange = function () {
         if (request.readyState === XMLHttpRequest.DONE && request.status === 200) {
             callback(JSON.parse(request.responseText));
+            $("#error-message").html("");
+        } else {
+            var error_message = "";
+            if (request.responseText) {
+                error_message = JSON.parse(request.responseText)["message"]
+            }
+            $("#error-message").html("<p>" + request.status + " " + error_message + "</p>");
         }
     };
     request.send(null);
@@ -25,6 +32,9 @@ function github_POST(data, url, callback) {
     request.onreadystatechange = function () {
         if (request.readyState === XMLHttpRequest.DONE && request.status === 201) {
             callback(JSON.parse(request.responseText));
+            $("#error-message").html("");
+        } else {
+            $("#error-message").html("<p>" + request + "</p>");
         }
     };
     request.send(data);
