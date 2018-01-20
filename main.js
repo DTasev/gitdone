@@ -108,7 +108,6 @@ $(window).on('hashchange', function () {
 });
 
 function createNewIssue() {
-    console.log("Enter pressed");
     var data = {
         "title": $("#new-issue").val()
     };
@@ -116,7 +115,4 @@ function createNewIssue() {
     github_POST(JSON.stringify(data), makeRepositoryIssuesUrl(window.location.hash), function (response) {
         showIssues();
     });
-
 }
-
-github_GET(GITHUB_REPOSITORIES_URL, showRepositories);
