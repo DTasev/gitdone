@@ -1,4 +1,4 @@
-var GITHUB_REPOSITORIES_URL = "https://api.github.com/user/repos?visibility=all";
+var GITHUB_REPOSITORIES_URL = "https://api.github.com/user/repos";
 var GITHUB_REPO_BASE_URL = "https://api.github.com/repos/";
 
 function makeRepositoryIssuesUrl(hash) {
@@ -114,6 +114,9 @@ function showIssues() {
 
 $(document).on('keyup', "#repo-filter input", $.proxy(filterRepos, this));
 $("#api-key").on('change', function () {
+    github_GET(GITHUB_REPOSITORIES_URL, showRepositories);
+});
+$(document).ready(function () {
     github_GET(GITHUB_REPOSITORIES_URL, showRepositories);
 });
 
