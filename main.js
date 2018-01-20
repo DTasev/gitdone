@@ -48,7 +48,7 @@ function makeTableRows(json_data, data_parsing_func) {
 }
 
 function makeIssueInputField() {
-    return "<tr><td><input id=\"new-issue\" type=\"text\" placeholder=\"New issue\" /></td></tr>"
+    return "<tr><td><input id=\"new-issue-title\" type=\"text\" placeholder=\"New issue Title\" /><input id=\"new-issue-body\" type=\"text\" placeholder=\"Details (Optional)\" /></td></tr>"
 }
 
 function showRepositories(repositories) {
@@ -63,8 +63,14 @@ function showIssuesForRepo(issues) {
     var elem = document.getElementById("issues-list");
     var newhtml = makeTableRows(issues, getDataForIssue);
     elem.innerHTML = newhtml + makeIssueInputField();
-    $("#new-issue").bind("enterKey", createNewIssue);
-    $("#new-issue").keyup(function (e) {
+    $("#new-issue-title").bind("enterKey", createNewIssue);
+    $("#new-issue-title").keyup(function (e) {
+        if (e.keyCode == 13) {
+            $(this).trigger("enterKey");
+        }
+    });
+    $("#new-issue-body").bind("enterKey", createNewIssue);
+    $("#new-issue-body").keyup(function (e) {
         if (e.keyCode == 13) {
             $(this).trigger("enterKey");
         }
@@ -97,7 +103,7 @@ function showIssues() {
 }
 
 $(document).on('keyup', "#repo-filter input", $.proxy(filterRepos, this));
-$("#api-key").change(function () {
+$("#api-key").on('change', function () {
     github_GET(GITHUB_REPOSITORIES_URL, showRepositories);
 });
 
@@ -109,7 +115,8 @@ $(window).on('hashchange', function () {
 
 function createNewIssue() {
     var data = {
-        "title": $("#new-issue").val()
+        "title": $("#new-issue-title").val(),
+        "body": $("#new-issue-body").val()
     };
 
     github_POST(JSON.stringify(data), makeRepositoryIssuesUrl(window.location.hash), function (response) {
