@@ -92,6 +92,9 @@ function filterRepos(e) {
 }
 
 $(document).on('keyup', "#repo-filter input", $.proxy(filterRepos, this));
+$("#api-key").change(function () {
+    github_GET(GITHUB_REPOSITORIES_URL, showRepositories);
+});
 $(window).on('hashchange', function () {
     if (window.location.hash.length > 1) {
         var repositoryUrl = makeRepositoryIssuesUrl(window.location.hash);
