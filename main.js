@@ -91,14 +91,19 @@ function filterRepos(e) {
     }
 }
 
+function showIssues() {
+    var repositoryUrl = makeRepositoryIssuesUrl(window.location.hash);
+    github_GET(repositoryUrl, showIssuesForRepo);
+}
+
 $(document).on('keyup', "#repo-filter input", $.proxy(filterRepos, this));
 $("#api-key").change(function () {
     github_GET(GITHUB_REPOSITORIES_URL, showRepositories);
 });
+
 $(window).on('hashchange', function () {
     if (window.location.hash.length > 1) {
-        var repositoryUrl = makeRepositoryIssuesUrl(window.location.hash);
-        github_GET(repositoryUrl, showIssuesForRepo);
+        showIssues();
     }
 });
 
@@ -109,10 +114,9 @@ function createNewIssue() {
     };
 
     github_POST(JSON.stringify(data), makeRepositoryIssuesUrl(window.location.hash), function (response) {
-        console.log(response);
+        showIssues();
     });
 
-    // TODO refresh the entries table now
 }
 
 github_GET(GITHUB_REPOSITORIES_URL, showRepositories);
