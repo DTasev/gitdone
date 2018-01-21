@@ -63,7 +63,6 @@ function makeImageLinkOpenInNewTab(address) {
     img.src = EXTERNAL_IMAGE_URL;
     elem_a.appendChild(img);
     return elem_a.outerHTML;
-    // return '<a href="' + encodeURI(address) + '" target="_blank"></a>';
 }
 function getDataForRepository(repo_entry) {
     return "<td>" + makeLink("#" + repo_entry["full_name"], repo_entry["name"]) + '</td><td><span>' + makeImageLinkOpenInNewTab(repo_entry["html_url"]) + '</span></td>';
