@@ -1,6 +1,6 @@
 var GITHUB_REPOSITORIES_URL = "https://api.github.com/user/repos";
 var GITHUB_REPO_BASE_URL = "https://api.github.com/repos/";
-var EXTERNAL_IMAGE_URL = "https://i.imgur.com/1DpOZzv.png";
+var EXTERNAL_IMAGE_URL = encodeURI("https://i.imgur.com/1DpOZzv.png");
 function makeRepositoryIssuesUrl(hash) {
     return "https://api.github.com/repos/" + hash.substring(1) + "/issues";
 }
@@ -41,15 +41,29 @@ function github_POST(data, url, callback) {
 }
 
 function makeLink(address, name) {
-    return '<a href="' + address + '">' + name + '</a>';
+    var elem_a = document.createElement('a');
+    elem_a.href = encodeURI(address);
+    elem_a.appendChild(document.createTextNode(name));
+    return elem_a.outerHTML;
 }
 
 function makeLinkOpenInNewTab(address, name) {
-    return "<a href=\"" + address + "\" target=\"_blank\">" + name + "</a>";
+    var elem_a = document.createElement('a');
+    elem_a.href = encodeURI(address);
+    elem_a.target = "_blank";
+    elem_a.appendChild(document.createTextNode(name));
+    return elem_a.outerHTML;
 }
 
 function makeImageLinkOpenInNewTab(address) {
-    return '<a href="' + address + '" target="_blank"><img src="' + EXTERNAL_IMAGE_URL + '"/></a>';
+    var elem_a = document.createElement('a');
+    elem_a.href = encodeURI(address);
+    elem_a.target = "_blank";
+    var img = document.createElement("img");
+    img.src = EXTERNAL_IMAGE_URL;
+    elem_a.appendChild(img);
+    return elem_a.outerHTML;
+    // return '<a href="' + encodeURI(address) + '" target="_blank"></a>';
 }
 function getDataForRepository(repo_entry) {
     return "<td>" + makeLink("#" + repo_entry["full_name"], repo_entry["name"]) + '</td><td><span>' + makeImageLinkOpenInNewTab(repo_entry["html_url"]) + '</span></td>';
