@@ -136,6 +136,9 @@ $("#api-key").on('change', function () {
     github_GET(GITHUB_REPOSITORIES_URL, showRepositories);
 });
 $(document).ready(function () {
+    // simulate a click, this allows Chrome to set the credentials' field value
+    // if we don't do this then api-key is empty on the first github GET
+    document.getElementById("api-key").click();
     github_GET(GITHUB_REPOSITORIES_URL, showRepositories);
 });
 
