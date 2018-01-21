@@ -64,7 +64,7 @@ function makeTableRows(json_data, data_parsing_func) {
 }
 
 function makeIssueInputField() {
-    return "<tr><td><input id=\"new-issue-title\" type=\"text\" placeholder=\"New issue Title\" /><input id=\"new-issue-body\" type=\"text\" placeholder=\"Details (Optional)\" /></td></tr>"
+    return '<tr><td><input id="new-issue-title" type="text" placeholder="New issue Title" autofocus /><input id="new-issue-body" type="text" placeholder="Details (Optional)" /></td></tr>'
 }
 
 function showRepositories(repositories) {
