@@ -1,6 +1,6 @@
 var GITHUB_REPOSITORIES_URL = "https://api.github.com/user/repos";
 var GITHUB_REPO_BASE_URL = "https://api.github.com/repos/";
-
+var EXTERNAL_IMAGE_URL = "https://i.imgur.com/1DpOZzv.png";
 function makeRepositoryIssuesUrl(hash) {
     return "https://api.github.com/repos/" + hash.substring(1) + "/issues";
 }
@@ -41,18 +41,24 @@ function github_POST(data, url, callback) {
 }
 
 function makeLink(address, name) {
-    return "<a href=\"" + address + "\">" + name + "</a>";
+    return '<a href="' + address + '">' + name + '</a>';
 }
+
 function makeLinkOpenInNewTab(address, name) {
     return "<a href=\"" + address + "\" target=\"_blank\">" + name + "</a>";
 }
-function getDataForRepository(repo_entry) {
-    return makeLink("#" + repo_entry["full_name"], repo_entry["name"]);
+
+function makeImageLinkOpenInNewTab(address) {
+    return '<a href="' + address + '" target="_blank"><img src="' + EXTERNAL_IMAGE_URL + '"/></a>';
 }
+function getDataForRepository(repo_entry) {
+    return "<td>" + makeLink("#" + repo_entry["full_name"], repo_entry["name"]) + '</td><td><span>' + makeImageLinkOpenInNewTab(repo_entry["html_url"]) + '</span></td>';
+}
+
 function makeTableRows(json_data, data_parsing_func) {
     var newhtml = "";
     for (var entry of json_data) {
-        newhtml += "<tr><td>" + data_parsing_func(entry) + "</td></tr>";
+        newhtml += "<tr>" + data_parsing_func(entry) + "</tr>";
     }
     return newhtml;
 }
@@ -67,7 +73,7 @@ function showRepositories(repositories) {
 }
 
 function getDataForIssue(issue) {
-    return makeLinkOpenInNewTab(issue["html_url"], issue["title"]);
+    return "<td>" + makeLinkOpenInNewTab(issue["html_url"], issue["title"]) + "</td>";
 }
 function showIssuesForRepo(issues) {
     var elem = document.getElementById("issues-list");
