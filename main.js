@@ -65,7 +65,15 @@ function makeImageLinkOpenInNewTab(address) {
     return elem_a.outerHTML;
 }
 function getDataForRepository(repo_entry) {
-    return "<td>" + makeLink("#" + repo_entry["full_name"], repo_entry["name"]) + '</td><td><span>' + makeImageLinkOpenInNewTab(repo_entry["html_url"]) + '</span></td>';
+    var repo_name = document.createElement("td");
+    repo_name.innerHTML = makeLink("#" + repo_entry["full_name"], repo_entry["name"]);
+
+    var repo_ext_link = document.createElement("td");
+    var image_span = document.createElement("span");
+    image_span.innerHTML = makeImageLinkOpenInNewTab(repo_entry["html_url"]);
+    repo_ext_link.appendChild(image_span);
+
+    return repo_name.outerHTML + repo_ext_link.outerHTML;
 }
 
 function makeTableRows(json_data, data_parsing_func) {
