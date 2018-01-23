@@ -29,12 +29,20 @@ function makeImageLinkOpenInNewTab(address) {
     return elem_a.outerHTML;
 }
 
-function makeRows(json_data, data_parsing_func) {
-    var newhtml = "";
+function makeRepositoryRows(json_data) {
+    var rows = [];
     for (let entry of json_data.entries()) {
-        newhtml += data_parsing_func(entry);
+        rows.push(buildRepositoryRow(entry));
     }
-    return newhtml;
+    return Pinned.reorder(rows).join('');
+}
+
+function makeRows(json_data) {
+    var rows = [];
+    for (let entry of json_data.entries()) {
+        rows.push(buildEntryRow(entry));
+    }
+    return rows;
 }
 
 function makeIssueInputField() {
@@ -46,10 +54,10 @@ function makeIssueInputField() {
 
 function showRepositories(repositories) {
     var elem = document.getElementById("repository-list");
-    elem.innerHTML = makeRows(repositories, getRepositoryData);
+    elem.innerHTML = makeRepositoryRows(repositories);
 }
 
-function getRepositoryData(id_entry_tuple) {
+function buildRepositoryRow(id_entry_tuple) {
     let id = id_entry_tuple[0];
     let entry = id_entry_tuple[1];
 
@@ -83,7 +91,7 @@ function getRepositoryData(id_entry_tuple) {
     return div.outerHTML;
 }
 
-function getIssueData(id_issue_tuple) {
+function buildEntryRow(id_issue_tuple) {
     let issue = id_issue_tuple[1];
     var outer_div = document.createElement("div");
     outer_div.className = "w3-row w3-dark-grey issue-margin-bottom";
@@ -95,7 +103,7 @@ function getIssueData(id_issue_tuple) {
 
 function showIssuesForRepo(issues) {
     var elem = document.getElementById("issues-list")
-    var newhtml = makeRows(issues, getIssueData);
+    var newhtml = makeRows(issues);
     elem.innerHTML = newhtml + makeIssueInputField();
     $("#new-issue-title").bind("enterKey", createNewIssue);
     $("#new-issue-title").keyup(function (e) {
@@ -113,20 +121,21 @@ function showIssuesForRepo(issues) {
 
 // Function specific to hiding the rows of a table
 function filterRepos(e) {
-    var string = $("#repo-filter input").val().toLowerCase();
-    var repo;
+    let string = $("#repo-filter input").val().toLowerCase();
+    let repo;
 
+    let repo_row_tag = "#repository-list .w3-row";
     if (string.length > 0) {
         // which tag is captured will have to be changed, if the table is removed
-        $("#repository-list a").each(function (i, v) {
-            if (v.text.indexOf(string) == -1) {
+        $(repo_row_tag).each(function (i, v) {
+            if (v.children[0].text.indexOf(string) == -1) {
                 $(this).hide();
             } else {
                 $(this).show();
             }
         });
     } else {
-        $("#repository-list a").show();
+        $(repo_row_tag).show();
     }
 }
 

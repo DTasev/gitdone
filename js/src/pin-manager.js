@@ -41,3 +41,16 @@ Pinned.addOrRemove = function (id) {
         $("#repo_" + id + " img")[0].src = ImageUrl.PIN;
     }
 }
+Pinned.reorder = function (rows) {
+    debugger;
+    let new_rows = [];
+    let current = Pinned.getList();
+
+    for (let pinned of current) {
+        let ind = rows.indexOf(pinned);
+        if (ind != -1) {
+            new_rows.push(rows.splice(ind));
+        }
+    }
+    return new_rows.concat(rows);
+}
