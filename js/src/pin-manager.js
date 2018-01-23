@@ -3,7 +3,11 @@ function Pinned() { }
 Pinned.LOCAL_STORAGE_NAME = "gitdone_pinned";
 
 Pinned.get = function () {
-    return window.localStorage.getItem(Pinned.LOCAL_STORAGE_NAME);
+    // add the comma at the end, to make sure the last entry does not
+    // fail comparison for presence, simply because it doesn't have the
+    // coma at the end, e.g. before: "apples,rails" - checking for "rails," fails
+    // but now it will be "apples,rails," and the check will be correct
+    return window.localStorage.getItem(Pinned.LOCAL_STORAGE_NAME) + ',';
 }
 
 Pinned.getList = function () {
@@ -12,10 +16,6 @@ Pinned.getList = function () {
         return current.split(',');
     }
     return null;
-}
-
-Pinned.isPinned = function (name) {
-    return Pinned.get().indexOf(name) != -1;
 }
 
 Pinned.add = function (name, append = true) {
@@ -37,7 +37,11 @@ Pinned.remove = function (to_be_removed) {
 Pinned.addOrRemove = function (id) {
     let chosen_repo = $("#repo_" + id + " a")[0].text;
     let current = Pinned.get();
-    if (!current || current.indexOf(chosen_repo) == -1) {
+    // use the comma-separated string returned by get
+    // adding the coma at the end removes the possibility of
+    // partially matching a string, e.g. dawdle-web and dawdle-web-secret
+    // with the coma dawdle-web, and dawedle-web-secret, will not match!
+    if (!current || current.indexOf(chosen_repo + ',') == -1) {
         Pinned.add(chosen_repo);
         $("#repo_" + id + " img")[0].src = ImageUrl.PINNED;
     } else {
@@ -54,7 +58,6 @@ Pinned.reorder = function (rows) {
     }
     let elemenets_to_append = current.length;
 
-    debugger;
     // iterate through each row
     let ind, row, row_text;
     for (let row_tuple of rows.entries()) {
@@ -65,8 +68,7 @@ Pinned.reorder = function (rows) {
 
         // check if the repository is pinned
         for (let pinned of current) {
-            let index_in_row = row_text.indexOf(pinned);
-            if (index_in_row != -1) { // if this is the pinned repository
+            if (row_text === pinned) { // if this is the pinned repository
                 // change the pin icon to pinned
                 row.children[1].children[0].src = ImageUrl.PINNED;
                 // store the changed row
