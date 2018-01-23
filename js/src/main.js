@@ -1,6 +1,7 @@
 var GITHUB_REPOSITORIES_URL = "https://api.github.com/user/repos";
 var GITHUB_REPO_BASE_URL = "https://api.github.com/repos/";
 var EXTERNAL_IMAGE_URL = encodeURI("https://i.imgur.com/1DpOZzv.png");
+
 function makeRepositoryIssuesUrl(hash) {
     return "https://api.github.com/repos/" + hash.substring(1) + "/issues";
 }
@@ -24,6 +25,7 @@ function github_GET(url, callback) {
     };
     request.send(null);
 }
+
 function github_POST(data, url, callback) {
     var request = new XMLHttpRequest();
     var auth_basic = window.btoa($("#username input").val() + ":" + $("#api-key input").val());
@@ -44,7 +46,7 @@ function makeLink(address, name) {
     var elem_a = document.createElement('a');
     elem_a.href = encodeURI(address);
     elem_a.appendChild(document.createTextNode(name));
-    return elem_a.outerHTML;
+    return elem_a;
 }
 
 function makeLinkOpenInNewTab(address, name) {
@@ -64,28 +66,32 @@ function makeImageLinkOpenInNewTab(address) {
     elem_a.appendChild(img);
     return elem_a.outerHTML;
 }
+
 function getDataForRepository(repo_entry) {
-    var repo_name = document.createElement("td");
-    repo_name.innerHTML = makeLink("#" + repo_entry["full_name"], repo_entry["name"]);
-
-    var repo_ext_link = document.createElement("td");
-    var image_span = document.createElement("span");
-    image_span.innerHTML = makeImageLinkOpenInNewTab(repo_entry["html_url"]);
-    repo_ext_link.appendChild(image_span);
-
-    return repo_name.outerHTML + repo_ext_link.outerHTML;
+    var repo_link = makeLink("#" + repo_entry["full_name"], repo_entry["name"]);
+    repo_link.className = "w3-bar-item w3-button w3-padding w3-text-teal"
+    var html = repo_link.outerHTML;
+    // this is killing me, but repo_link.onclick=function(){w3_close();}; doesnt work!
+    html = html.substring(0, 2) + ' onclick="w3_close()"' + html.substring(2);
+    return html;
 }
 
 function makeTableRows(json_data, data_parsing_func) {
     var newhtml = "";
     for (var entry of json_data) {
-        newhtml += "<tr>" + data_parsing_func(entry) + "</tr>";
+        newhtml += data_parsing_func(entry);
     }
     return newhtml;
 }
 
 function makeIssueInputField() {
-    return '<tr><td><input id="new-issue-title" type="text" placeholder="New issue Title" autofocus /><input id="new-issue-body" type="text" placeholder="Details (Optional)" /></td></tr>'
+    var outer_div = document.createElement("div");
+    outer_div.className = "w3-row-padding";
+    var inner_div = document.createElement("div");
+    inner_div.className = "w3-container w3-margin-bottom w3-dark-grey w3-padding";
+    inner_div.innerHTML = '<input id="new-issue-title" type="text" placeholder="New issue Title" autofocus /><input id="new-issue-body" type="text" placeholder="Details (Optional)" />';
+    outer_div.appendChild(inner_div);
+    return outer_div.outerHTML;
 }
 
 function showRepositories(repositories) {
@@ -94,8 +100,16 @@ function showRepositories(repositories) {
 }
 
 function getDataForIssue(issue) {
-    return "<td>" + makeLinkOpenInNewTab(issue["html_url"], issue["title"]) + "</td>";
+    var outer_div = document.createElement("div");
+    outer_div.className = "w3-row-padding";
+    var inner_div = document.createElement("div");
+    inner_div.className = "w3-container w3-margin-bottom w3-dark-grey w3-padding";
+    inner_div.innerHTML = makeLinkOpenInNewTab(issue["html_url"], issue["title"]);
+    outer_div.appendChild(inner_div);
+
+    return outer_div.outerHTML;
 }
+
 function showIssuesForRepo(issues) {
     var elem = document.getElementById("issues-list");
     var newhtml = makeTableRows(issues, getDataForIssue);
