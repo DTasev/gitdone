@@ -15,3 +15,7 @@
 .out-link {
     display: inline-block;
 }
+
+.repo-link {
+    text-align: left;
+}

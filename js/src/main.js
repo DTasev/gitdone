@@ -67,7 +67,7 @@ function makeImageLinkOpenInNewTab(address) {
     return elem_a.outerHTML;
 }
 
-function makeTableRows(json_data, data_parsing_func) {
+function makeRows(json_data, data_parsing_func) {
     var newhtml = "";
     for (var entry of json_data) {
         newhtml += data_parsing_func(entry);
@@ -84,16 +84,25 @@ function makeIssueInputField() {
 
 function showRepositories(repositories) {
     var elem = document.getElementById("repository-list");
-    elem.innerHTML = makeTableRows(repositories, getRepositoryData);
+    elem.innerHTML = makeRows(repositories, getRepositoryData);
 }
 
-function getRepositoryData(repo_entry) {
-    var repo_link = makeLink("#" + repo_entry["full_name"], repo_entry["name"]);
-    repo_link.className = "w3-bar-item w3-button w3-padding w3-text-teal"
-    var html = repo_link.outerHTML;
-    // this is killing me, but repo_link.onclick=function(){w3_close();}; doesnt work!
-    html = html.substring(0, 2) + ' onclick="w3_close()"' + html.substring(2);
-    return html;
+function getRepositoryData(entry) {
+    var link = makeLink("#" + entry["full_name"], entry["name"]);
+    link.className = "repo-link w3-button w3-padding w3-text-teal w3-col m10 l10";
+    var link_html = link.outerHTML;
+    // this is killing me, but link.onclick=function(){w3_close();}; doesnt work!
+    link_html = link_html.substring(0, 2) + ' onclick="w3_close()"' + link_html.substring(2);
+
+    var ext_link = document.createElement("a");
+    var ext_img = document.createElement("img");
+    ext_link.href = entry["html_url"];
+    ext_link.target = "_blank";
+    ext_img.src = EXTERNAL_IMAGE_URL;
+    ext_link.appendChild(ext_img);
+    ext_link.className = "w3-button w3-padding w3-text-teal w3-hover-opacity w3-col m2 l2";
+
+    return '<div class="w3-row">' + link_html + ext_link.outerHTML + '</div>';
 }
 
 function getIssueData(issue) {
@@ -110,7 +119,7 @@ function getIssueData(issue) {
 
 function showIssuesForRepo(issues) {
     var elem = document.getElementById("issues-list")
-    var newhtml = makeTableRows(issues, getIssueData);
+    var newhtml = makeRows(issues, getIssueData);
     elem.innerHTML = newhtml + makeIssueInputField();
     $("#new-issue-title").bind("enterKey", createNewIssue);
     $("#new-issue-title").keyup(function (e) {
@@ -124,7 +133,6 @@ function showIssuesForRepo(issues) {
             $(this).trigger("enterKey");
         }
     });
-
 }
 
 // Function specific to hiding the rows of a table
