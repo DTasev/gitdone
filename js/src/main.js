@@ -30,11 +30,12 @@ function makeImageLinkOpenInNewTab(address) {
 }
 
 function makeRepositoryRows(json_data) {
-    var rows = [];
+    let rows = [];
     for (let entry of json_data.entries()) {
         rows.push(buildRepositoryRow(entry));
     }
-    return Pinned.reorder(rows).join('');
+    rows = Pinned.reorder(rows);
+    return rows.reduce((prev, cur) => prev += cur.outerHTML, "");
 }
 
 function makeRows(json_data) {
@@ -42,7 +43,7 @@ function makeRows(json_data) {
     for (let entry of json_data.entries()) {
         rows.push(buildEntryRow(entry));
     }
-    return rows;
+    return rows.join('');
 }
 
 function makeIssueInputField() {
@@ -88,7 +89,7 @@ function buildRepositoryRow(id_entry_tuple) {
     div.appendChild(pin_span);
     div.appendChild(ext_link);
 
-    return div.outerHTML;
+    return div;
 }
 
 function buildEntryRow(id_issue_tuple) {
