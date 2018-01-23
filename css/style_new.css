@@ -11,3 +11,7 @@
 .issue-margin-bottom {
     margin-bottom: 4px;
 }
+
+.out-link {
+    display: inline-block;
+}
