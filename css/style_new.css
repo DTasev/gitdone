@@ -1,0 +1,13 @@
+.issue-link {
+    display: block;
+    overflow: hidden;
+    text-decoration: none;
+    color: inherit;
+    cursor: pointer;
+    white-space: nowrap;
+    background-color: inherit;
+}
+
+.issue-margin-bottom {
+    margin-bottom: 4px;
+}

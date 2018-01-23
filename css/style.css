@@ -15,13 +15,14 @@ td {
     border-collapse: collapse;
 }
 
-.inline-block{
-    display:inline-block;
+.inline-block {
+    display: inline-block;
 }
 
 .one {
     float: left;
 }
+
 .two {
     margin-left: 15%;
     display: inline-block;
@@ -30,9 +31,9 @@ td {
 .pretty-links a {
     text-decoration: none;
     display: block;
-    color:black;
+    color: black;
 }
 
-.pretty-links a:hover{
+.pretty-links a:hover {
     background-color: aquamarine;
 }

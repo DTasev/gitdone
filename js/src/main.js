@@ -54,7 +54,7 @@ function makeLinkOpenInNewTab(address, name) {
     elem_a.href = encodeURI(address);
     elem_a.target = "_blank";
     elem_a.appendChild(document.createTextNode(name));
-    return elem_a.outerHTML;
+    return elem_a;
 }
 
 function makeImageLinkOpenInNewTab(address) {
@@ -67,15 +67,6 @@ function makeImageLinkOpenInNewTab(address) {
     return elem_a.outerHTML;
 }
 
-function getDataForRepository(repo_entry) {
-    var repo_link = makeLink("#" + repo_entry["full_name"], repo_entry["name"]);
-    repo_link.className = "w3-bar-item w3-button w3-padding w3-text-teal"
-    var html = repo_link.outerHTML;
-    // this is killing me, but repo_link.onclick=function(){w3_close();}; doesnt work!
-    html = html.substring(0, 2) + ' onclick="w3_close()"' + html.substring(2);
-    return html;
-}
-
 function makeTableRows(json_data, data_parsing_func) {
     var newhtml = "";
     for (var entry of json_data) {
@@ -86,33 +77,40 @@ function makeTableRows(json_data, data_parsing_func) {
 
 function makeIssueInputField() {
     var outer_div = document.createElement("div");
-    outer_div.className = "w3-row-padding";
-    var inner_div = document.createElement("div");
-    inner_div.className = "w3-container w3-margin-bottom w3-dark-grey w3-padding";
-    inner_div.innerHTML = '<input id="new-issue-title" type="text" placeholder="New issue Title" autofocus /><input id="new-issue-body" type="text" placeholder="Details (Optional)" />';
-    outer_div.appendChild(inner_div);
+    outer_div.className = "w3-row w3-dark-grey w3-padding";
+    outer_div.innerHTML = '<input class="w3-input w3-border" id="new-issue-title" type="text" placeholder="New issue Title" autofocus /><input class="w3-input w3-border" id="new-issue-body" type="text" placeholder="Details (Optional)" />';
     return outer_div.outerHTML;
 }
 
 function showRepositories(repositories) {
     var elem = document.getElementById("repository-list");
-    elem.innerHTML = makeTableRows(repositories, getDataForRepository);
+    elem.innerHTML = makeTableRows(repositories, getRepositoryData);
 }
 
-function getDataForIssue(issue) {
-    var outer_div = document.createElement("div");
-    outer_div.className = "w3-row-padding";
-    var inner_div = document.createElement("div");
-    inner_div.className = "w3-container w3-margin-bottom w3-dark-grey w3-padding";
-    inner_div.innerHTML = makeLinkOpenInNewTab(issue["html_url"], issue["title"]);
-    outer_div.appendChild(inner_div);
+function getRepositoryData(repo_entry) {
+    var repo_link = makeLink("#" + repo_entry["full_name"], repo_entry["name"]);
+    repo_link.className = "w3-bar-item w3-button w3-padding w3-text-teal"
+    var html = repo_link.outerHTML;
+    // this is killing me, but repo_link.onclick=function(){w3_close();}; doesnt work!
+    html = html.substring(0, 2) + ' onclick="w3_close()"' + html.substring(2);
+    return html;
+}
 
+function getIssueData(issue) {
+    var outer_div = document.createElement("div");
+    outer_div.className = "w3-row w3-dark-grey issue-margin-bottom";
+    // var inner_div = document.createElement("div");
+    // inner_div.className = "w3-dark-grey";
+    var new_tab_link_a = makeLinkOpenInNewTab(issue["html_url"], issue["title"]);
+    new_tab_link_a.className = "issue-link w3-text-sand w3-padding w3-block w3-ripple w3-hover-green";
+    outer_div.appendChild(new_tab_link_a);
+    // outer_div.appendChild(inner_div);
     return outer_div.outerHTML;
 }
 
 function showIssuesForRepo(issues) {
-    var elem = document.getElementById("issues-list");
-    var newhtml = makeTableRows(issues, getDataForIssue);
+    var elem = document.getElementById("issues-list")
+    var newhtml = makeTableRows(issues, getIssueData);
     elem.innerHTML = newhtml + makeIssueInputField();
     $("#new-issue-title").bind("enterKey", createNewIssue);
     $("#new-issue-title").keyup(function (e) {
@@ -136,15 +134,15 @@ function filterRepos(e) {
 
     if (string.length > 0) {
         // which tag is captured will have to be changed, if the table is removed
-        $("#repository-list tr").each(function (i, v) {
-            if (v.children[0].children[0].text.indexOf(string) == -1) {
+        $("#repository-list a").each(function (i, v) {
+            if (v.text.indexOf(string) == -1) {
                 $(this).hide();
             } else {
                 $(this).show();
             }
         });
     } else {
-        $("#repository-list tr").show();
+        $("#repository-list a").show();
     }
 }
 
