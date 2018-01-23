@@ -1,6 +1,11 @@
 var GITHUB_REPOSITORIES_URL = "https://api.github.com/user/repos";
 var GITHUB_REPO_BASE_URL = "https://api.github.com/repos/";
+
+// image used for the repository external link
 var EXTERNAL_IMAGE_URL = encodeURI("https://i.imgur.com/1DpOZzv.png");
+// image used for the pin functionality
+var PIN_IMAGE_URL = encodeURI("https://i.imgur.com/ainCXW5.png");
+var PINNED_IMAGE_URL = encodeURI("https://i.imgur.com/ux8ZZBl.png");
 
 function makeRepositoryIssuesUrl(hash) {
     return "https://api.github.com/repos/" + hash.substring(1) + "/issues";
@@ -53,6 +58,7 @@ function makeLinkOpenInNewTab(address, name) {
     var elem_a = document.createElement('a');
     elem_a.href = encodeURI(address);
     elem_a.target = "_blank";
+    // parse the external data safely as text, this protects from XSS
     elem_a.appendChild(document.createTextNode(name));
     return elem_a;
 }
@@ -102,18 +108,22 @@ function getRepositoryData(entry) {
     ext_link.appendChild(ext_img);
     ext_link.className = "w3-button w3-padding w3-text-teal w3-hover-opacity w3-col m2 l2";
 
+    // var span = document.createElement("span");
+    // var pin_img = document.createElement("img");
+    // pin_img.src = PIN_IMAGE_URL;
+    // span.appendChild(pin_img);
+    // span.className = "w3-button w3-padding w3-text-teal w3-hover-opacity w3-col m2 l2";
+
     return '<div class="w3-row">' + link_html + ext_link.outerHTML + '</div>';
+    // return '<div class="w3-row">' + link_html + span.outerHTML + ext_link.outerHTML + '</div>';
 }
 
 function getIssueData(issue) {
     var outer_div = document.createElement("div");
     outer_div.className = "w3-row w3-dark-grey issue-margin-bottom";
-    // var inner_div = document.createElement("div");
-    // inner_div.className = "w3-dark-grey";
-    var new_tab_link_a = makeLinkOpenInNewTab(issue["html_url"], issue["title"]);
+    var new_tab_link_a = makeLinkOpenInNewTab(issue["html_url"], issue["title"] + " #" + issue["number"]);
     new_tab_link_a.className = "issue-link w3-text-sand w3-padding w3-block w3-ripple w3-hover-green";
     outer_div.appendChild(new_tab_link_a);
-    // outer_div.appendChild(inner_div);
     return outer_div.outerHTML;
 }
 
