@@ -3,8 +3,13 @@ function Github() { }
 Github.REPOSITORIES_URL = "https://api.github.com/user/repos";
 
 Github.GET = function (url, callback) {
-    var request = new XMLHttpRequest();
-    var auth_basic = window.btoa($("#username input").val() + ":" + $("#api-key input").val());
+    let request = new XMLHttpRequest();
+    const api_key = $("#api-key input").val();
+    if (api_key === "") {
+        $("#error-message").html("No API key");
+        return;
+    }
+    const auth_basic = window.btoa($("#username input").val() + ":" + $("#api-key input").val());
     request.open("GET", url, true);
     request.setRequestHeader("Authorization", "Basic " + auth_basic);
     request.onreadystatechange = function () {
@@ -12,7 +17,7 @@ Github.GET = function (url, callback) {
             callback(JSON.parse(request.responseText));
             $("#error-message").html("");
         } else {
-            var error_message = "";
+            let error_message = "";
             if (request.responseText) {
                 error_message = JSON.parse(request.responseText)["message"]
             }
@@ -23,8 +28,8 @@ Github.GET = function (url, callback) {
 }
 
 Github.POST = function (data, url, callback) {
-    var request = new XMLHttpRequest();
-    var auth_basic = window.btoa($("#username input").val() + ":" + $("#api-key input").val());
+    let request = new XMLHttpRequest();
+    let auth_basic = window.btoa($("#username input").val() + ":" + $("#api-key input").val());
     request.open("POST", url, true);
     request.setRequestHeader("Authorization", "Basic " + auth_basic);
     request.onreadystatechange = function () {
