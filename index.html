@@ -41,10 +41,10 @@
             <div id="repo-filter" class="inline-block">
                 <input class="w3-input w3-border" type="text" placeholder="Filter repository names" />
             </div>
+            <div id="error-message" class="inline-block"></div>
         </div>
-        <div id="error-message" class="inline-block"></div>
-        <div id="repository-list" class="w3-bar-block">
-        </div>
+            <div id="repository-list" class="w3-bar-block">
+            </div>
         <div class="w3-panel w3-large">
             <a href="https://www.github.com/dtasev/gitdone" target="_blank" class="out-link">
                 <i class="fa fa-github w3-hover-opacity">
@@ -79,9 +79,9 @@
                 <div class="w3-section w3-bottombar w3-padding-16">
                     <span class="w3-margin-right">Filter:</span>
                     <button class="w3-button w3-black">ALL</button>
-                    <!-- <button class="w3-button w3-white">
-                        <i class="fa fa-diamond w3-margin-right"></i>Design</button>
-                    <button class="w3-button w3-white w3-hide-small">
+                    <button class="w3-button w3-white">
+                        <i class="fa fa-tencent-weibo w3-margin-right"></i>MINE</button>
+                    <!-- <button class="w3-button w3-white w3-hide-small">
                         <i class="fa fa-photo w3-margin-right"></i>Photos</button>
                     <button class="w3-button w3-white w3-hide-small">
                         <i class="fa fa-map-pin w3-margin-right"></i>Art</button> -->
@@ -94,19 +94,8 @@
         <!-- End page content -->
     </div>
 
-    <script>
-        // Script to open and close sidebar
-        function w3_open() {
-            document.getElementById("mySidebar").style.display = "block";
-            document.getElementById("myOverlay").style.display = "block";
-        }
-
-        function w3_close() {
-            document.getElementById("mySidebar").style.display = "none";
-            document.getElementById("myOverlay").style.display = "none";
-        }
-    </script>
     <script src="js/lib/jquery-3.2.1.js "></script>
+    <script src="js/src/site-controls.js"></script>
     <script src="js/src/pin-manager.js "></script>
     <script src="js/src/github.js "></script>
     <script src="js/src/image-urls.js "></script>
