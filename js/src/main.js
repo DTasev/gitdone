@@ -1,50 +1,6 @@
-var GITHUB_REPOSITORIES_URL = "https://api.github.com/user/repos";
-var GITHUB_REPO_BASE_URL = "https://api.github.com/repos/";
-
-// image used for the repository external link
-var EXTERNAL_IMAGE_URL = encodeURI("https://i.imgur.com/1DpOZzv.png");
-// image used for the pin functionality
-var PIN_IMAGE_URL = encodeURI("https://i.imgur.com/ainCXW5.png");
-var PINNED_IMAGE_URL = encodeURI("https://i.imgur.com/ux8ZZBl.png");
-
+// TODO move to github.js
 function makeRepositoryIssuesUrl(hash) {
     return "https://api.github.com/repos/" + hash.substring(1) + "/issues";
-}
-
-function github_GET(url, callback) {
-    var request = new XMLHttpRequest();
-    var auth_basic = window.btoa($("#username input").val() + ":" + $("#api-key input").val());
-    request.open("GET", url, true);
-    request.setRequestHeader("Authorization", "Basic " + auth_basic);
-    request.onreadystatechange = function () {
-        if (request.readyState === XMLHttpRequest.DONE && request.status === 200) {
-            callback(JSON.parse(request.responseText));
-            $("#error-message").html("");
-        } else {
-            var error_message = "";
-            if (request.responseText) {
-                error_message = JSON.parse(request.responseText)["message"]
-            }
-            $("#error-message").html("<p>" + request.status + " " + error_message + "</p>");
-        }
-    };
-    request.send(null);
-}
-
-function github_POST(data, url, callback) {
-    var request = new XMLHttpRequest();
-    var auth_basic = window.btoa($("#username input").val() + ":" + $("#api-key input").val());
-    request.open("POST", url, true);
-    request.setRequestHeader("Authorization", "Basic " + auth_basic);
-    request.onreadystatechange = function () {
-        if (request.readyState === XMLHttpRequest.DONE && request.status === 201) {
-            callback(JSON.parse(request.responseText));
-            $("#error-message").html("");
-        } else {
-            $("#error-message").html("<p>" + request + "</p>");
-        }
-    };
-    request.send(data);
 }
 
 function makeLink(address, name) {
@@ -68,17 +24,26 @@ function makeImageLinkOpenInNewTab(address) {
     elem_a.href = encodeURI(address);
     elem_a.target = "_blank";
     var img = document.createElement("img");
-    img.src = EXTERNAL_IMAGE_URL;
+    img.src = ImageUrl.EXTERNAL;
     elem_a.appendChild(img);
     return elem_a.outerHTML;
 }
 
-function makeRows(json_data, data_parsing_func) {
-    var newhtml = "";
-    for (var entry of json_data) {
-        newhtml += data_parsing_func(entry);
+function makeRepositoryRows(json_data) {
+    let rows = [];
+    for (let entry of json_data.entries()) {
+        rows.push(buildRepositoryRow(entry));
     }
-    return newhtml;
+    rows = Pinned.reorder(rows);
+    return rows.reduce((prev, cur) => prev += cur.outerHTML, "");
+}
+
+function makeRows(json_data) {
+    var rows = [];
+    for (let entry of json_data.entries()) {
+        rows.push(buildEntryRow(entry));
+    }
+    return rows.join('');
 }
 
 function makeIssueInputField() {
@@ -90,35 +55,45 @@ function makeIssueInputField() {
 
 function showRepositories(repositories) {
     var elem = document.getElementById("repository-list");
-    elem.innerHTML = makeRows(repositories, getRepositoryData);
+    elem.innerHTML = makeRepositoryRows(repositories);
 }
 
-function getRepositoryData(entry) {
+function buildRepositoryRow(id_entry_tuple) {
+    let id = id_entry_tuple[0];
+    let entry = id_entry_tuple[1];
+
     var link = makeLink("#" + entry["full_name"], entry["name"]);
-    link.className = "repo-link w3-button w3-padding w3-text-teal w3-col m10 l10";
-    var link_html = link.outerHTML;
-    // this is killing me, but link.onclick=function(){w3_close();}; doesnt work!
-    link_html = link_html.substring(0, 2) + ' onclick="w3_close()"' + link_html.substring(2);
+    link.className = "repo-link w3-button w3-padding w3-text-teal w3-col m8 l8";
+    link.setAttribute('onclick', "w3_close();");
 
     var ext_link = document.createElement("a");
     var ext_img = document.createElement("img");
     ext_link.href = entry["html_url"];
     ext_link.target = "_blank";
-    ext_img.src = EXTERNAL_IMAGE_URL;
+    ext_img.src = ImageUrl.EXTERNAL;
     ext_link.appendChild(ext_img);
     ext_link.className = "w3-button w3-padding w3-text-teal w3-hover-opacity w3-col m2 l2";
 
-    // var span = document.createElement("span");
-    // var pin_img = document.createElement("img");
-    // pin_img.src = PIN_IMAGE_URL;
-    // span.appendChild(pin_img);
-    // span.className = "w3-button w3-padding w3-text-teal w3-hover-opacity w3-col m2 l2";
+    var pin_span = document.createElement("span");
+    var pin_img = document.createElement("img");
+    pin_img.src = ImageUrl.PIN;
+    pin_span.appendChild(pin_img);
+    pin_span.setAttribute('onclick', 'Pinned.addOrRemove(' + id + ');');
 
-    return '<div class="w3-row">' + link_html + ext_link.outerHTML + '</div>';
-    // return '<div class="w3-row">' + link_html + span.outerHTML + ext_link.outerHTML + '</div>';
+    pin_span.className = "w3-button w3-padding w3-text-teal w3-hover-opacity w3-col m2 l2";
+    $(pin_span).on('click', $.proxy(Pinned.addOrRemove, this));
+    var div = document.createElement("div");
+    div.className = "w3-row";
+    div.id = 'repo_' + id;
+    div.appendChild(link);
+    div.appendChild(pin_span);
+    div.appendChild(ext_link);
+
+    return div;
 }
 
-function getIssueData(issue) {
+function buildEntryRow(id_issue_tuple) {
+    let issue = id_issue_tuple[1];
     var outer_div = document.createElement("div");
     outer_div.className = "w3-row w3-dark-grey issue-margin-bottom";
     var new_tab_link_a = makeLinkOpenInNewTab(issue["html_url"], issue["title"] + " #" + issue["number"]);
@@ -129,7 +104,7 @@ function getIssueData(issue) {
 
 function showIssuesForRepo(issues) {
     var elem = document.getElementById("issues-list")
-    var newhtml = makeRows(issues, getIssueData);
+    var newhtml = makeRows(issues);
     elem.innerHTML = newhtml + makeIssueInputField();
     $("#new-issue-title").bind("enterKey", createNewIssue);
     $("#new-issue-title").keyup(function (e) {
@@ -147,37 +122,38 @@ function showIssuesForRepo(issues) {
 
 // Function specific to hiding the rows of a table
 function filterRepos(e) {
-    var string = $("#repo-filter input").val().toLowerCase();
-    var repo;
+    let string = $("#repo-filter input").val().toLowerCase();
+    let repo;
 
+    let repo_row_tag = "#repository-list .w3-row";
     if (string.length > 0) {
         // which tag is captured will have to be changed, if the table is removed
-        $("#repository-list a").each(function (i, v) {
-            if (v.text.indexOf(string) == -1) {
+        $(repo_row_tag).each(function (i, v) {
+            if (v.children[0].text.indexOf(string) == -1) {
                 $(this).hide();
             } else {
                 $(this).show();
             }
         });
     } else {
-        $("#repository-list a").show();
+        $(repo_row_tag).show();
     }
 }
 
 function showIssues() {
     var repositoryUrl = makeRepositoryIssuesUrl(window.location.hash);
-    github_GET(repositoryUrl, showIssuesForRepo);
+    Github.GET(repositoryUrl, showIssuesForRepo);
 }
 
 $(document).on('keyup', "#repo-filter input", $.proxy(filterRepos, this));
 $("#api-key").on('change', function () {
-    github_GET(GITHUB_REPOSITORIES_URL, showRepositories);
+    Github.GET(Github.REPOSITORIES_URL, showRepositories);
 });
 $(document).ready(function () {
     // simulate a click, this allows Chrome to set the credentials' field value
     // if we don't do this then api-key is empty on the first github GET
     document.getElementById("api-key").click();
-    github_GET(GITHUB_REPOSITORIES_URL, showRepositories);
+    Github.GET(Github.REPOSITORIES_URL, showRepositories);
 });
 
 $(window).on('hashchange', function () {
@@ -192,7 +168,7 @@ function createNewIssue() {
         "body": $("#new-issue-body").val()
     };
 
-    github_POST(JSON.stringify(data), makeRepositoryIssuesUrl(window.location.hash), function (response) {
+    Github.POST(JSON.stringify(data), makeRepositoryIssuesUrl(window.location.hash), function (response) {
         showIssues();
     });
 }
