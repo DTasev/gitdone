@@ -13,6 +13,7 @@ Github.GET = function (url, callback) {
     request.open("GET", url, true);
     request.setRequestHeader("Authorization", "Basic " + auth_basic);
     request.onreadystatechange = function () {
+        LoadIcon.hide();
         if (request.readyState === XMLHttpRequest.DONE && request.status === 200) {
             callback(JSON.parse(request.responseText));
             $("#error-message").html("");
@@ -24,6 +25,8 @@ Github.GET = function (url, callback) {
             $("#error-message").html("<p>" + request.status + " " + error_message + "</p>");
         }
     };
+
+    LoadIcon.show();
     request.send(null);
 }
 
