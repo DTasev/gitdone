@@ -1,7 +1,20 @@
-function Repositories() { }
+function Repositories() {
+    var self = this;
+    self.repo_cache = null;
+}
+Repositories.retrieve = function (use_cached = false) {
+    if (use_cached && self.repo_cache) {
+        // Don't query github for the repositories, and use the cache
+        Repositories.show(self.repo_cache);
+    }
+    else {
+        Github.GET(Github.REPOSITORIES_URL, Repositories.show);
+    }
+}
 Repositories.show = function (repositories) {
-    var elem = document.getElementById("repository-list");
-    elem.innerHTML = Repositories.makeRows(repositories);
+    var repo_list = document.getElementById("repository-list");
+    self.repo_cache = repositories;
+    repo_list.innerHTML = Repositories.makeRows(repositories);
 }
 
 Repositories.makeLink = function (address, name) {

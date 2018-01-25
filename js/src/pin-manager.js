@@ -48,6 +48,7 @@ Pinned.addOrRemove = function (id) {
         Pinned.remove(chosen_repo);
         $("#repo_" + id + " img")[0].src = ImageUrl.PIN;
     }
+    Repositories.retrieve(true);
 }
 Pinned.reorder = function (rows) {
     let new_rows = [], indices_to_remove = [];

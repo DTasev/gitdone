@@ -32,25 +32,20 @@ function filterRepos(e) {
     }
 }
 
-function queryIssues() {
-    var repositoryUrl = makeRepositoryIssuesUrl(window.location.hash);
-    Github.GET(repositoryUrl, Issues.show);
-}
-
 $(document).on('keyup', "#repo-filter input", $.proxy(filterRepos, this));
 $("#api-key").on('change', function () {
-    Github.GET(Github.REPOSITORIES_URL, Repositories.show);
+    Repositories.retrieve();
 });
 $(document).ready(function () {
     // simulate a click, this allows Chrome to set the credentials' field value
     // if we don't do this then api-key is empty on the first github GET
     document.getElementById("api-key").click();
-    Github.GET(Github.REPOSITORIES_URL, Repositories.show);
+    Repositories.retrieve();
 });
 
 $(window).on('hashchange', function () {
     if (window.location.hash.length > 1) {
-        queryIssues();
+        Issues.retrieve();
     }
 });
 
@@ -61,6 +56,6 @@ function createNewIssue() {
     };
 
     Github.POST(JSON.stringify(data), makeRepositoryIssuesUrl(window.location.hash), function (response) {
-        queryIssues();
+        Issues.retrieve();
     });
 }

@@ -1,5 +1,10 @@
 function Issues() { }
 
+Issues.retrieve = function () {
+    var repositoryUrl = makeRepositoryIssuesUrl(window.location.hash);
+    Github.GET(repositoryUrl, Issues.show);
+}
+
 Issues.show = function (issues) {
     var elem = document.getElementById("issues-list")
     var newhtml = Issues.makeRows(issues);
