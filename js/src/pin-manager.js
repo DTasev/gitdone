@@ -43,10 +43,10 @@ Pinned.addOrRemove = function (id) {
     // with the coma dawdle-web, and dawedle-web-secret, will not match!
     if (!current || current.indexOf(chosen_repo + ',') == -1) {
         Pinned.add(chosen_repo);
-        $("#repo_" + id + " img")[0].src = ImageUrl.PINNED;
+        $("#repo_" + id + " i")[0].className = 'fa fa-thumb-tack';
     } else {
         Pinned.remove(chosen_repo);
-        $("#repo_" + id + " img")[0].src = ImageUrl.PIN;
+        $("#repo_" + id + " i")[0].className = 'fa fa-check';
     }
     Repositories.retrieve(true);
 }
@@ -71,7 +71,7 @@ Pinned.reorder = function (rows) {
         for (let pinned of current) {
             if (row_text === pinned) { // if this is the pinned repository
                 // change the pin icon to pinned
-                row.children[1].children[0].src = ImageUrl.PINNED;
+                row.children[1].children[0].className = 'fa fa-check';
                 // store the changed row
                 new_rows.push(row);
                 // store the index to be removed from the original list later
