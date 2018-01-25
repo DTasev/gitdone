@@ -1,5 +1,5 @@
-
 function Issues() { }
+
 Issues.show = function (issues) {
     var elem = document.getElementById("issues-list")
     var newhtml = Issues.makeRows(issues);
@@ -18,6 +18,7 @@ Issues.show = function (issues) {
         }
     });
 }
+
 Issues.makeRows = function (json_data) {
     var rows = [];
     for (let entry of json_data.entries()) {
