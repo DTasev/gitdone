@@ -13,16 +13,20 @@ Github.GET = function (url, callback) {
     request.open("GET", url, true);
     request.setRequestHeader("Authorization", "Basic " + auth_basic);
     request.onreadystatechange = function () {
-        LoadIcon.hide();
-        if (request.readyState === XMLHttpRequest.DONE && request.status === 200) {
-            callback(JSON.parse(request.responseText));
-            $("#error-message").html("");
-        } else {
-            let error_message = "";
-            if (request.responseText) {
-                error_message = JSON.parse(request.responseText)["message"]
+        // if the request isn't finished yet, don't do anything
+        // it is possible the callback will trigger, before the request is fully finished
+        if (request.readyState === XMLHttpRequest.DONE) {
+            LoadIcon.hide();
+            if (request.status === 200) {
+                callback(JSON.parse(request.responseText));
+                $("#error-message").html("");
+            } else if (request.status !== 204) { // if we got no content back, do nothing
+                let error_message = "";
+                if (request.responseText) {
+                    error_message = JSON.parse(request.responseText)["message"]
+                }
+                $("#error-message").html("<p>" + request.status + " " + error_message + "</p>");
             }
-            $("#error-message").html("<p>" + request.status + " " + error_message + "</p>");
         }
     };
 
