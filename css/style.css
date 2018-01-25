@@ -1,39 +1,20 @@
-body,
-h1,
-h2,
-h3,
-h4,
-h5,
-h6 {
-    font-family: "Raleway", sans-serif
-}
-
-table,
-th,
-td {
-    border: 1px solid black;
-    border-collapse: collapse;
-}
-
-.inline-block {
-    display: inline-block;
-}
-
-.one {
-    float: left;
-}
-
-.two {
-    margin-left: 15%;
-    display: inline-block;
-}
-
-.pretty-links a {
-    text-decoration: none;
+.issue-link {
     display: block;
-    color: black;
+    overflow: hidden;
+    text-decoration: none;
+    color: inherit;
+    cursor: pointer;
+    background-color: inherit;
 }
 
-.pretty-links a:hover {
-    background-color: aquamarine;
+.issue-margin-bottom {
+    margin-bottom: 4px;
+}
+
+.out-link {
+    display: inline-block;
+}
+
+.repo-link {
+    text-align: left;
 }
