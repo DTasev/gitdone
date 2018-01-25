@@ -63,7 +63,7 @@ function buildRepositoryRow(id_entry_tuple) {
     let entry = id_entry_tuple[1];
 
     var link = makeLink("#" + entry["full_name"], entry["name"]);
-    link.className = "repo-link w3-button w3-padding w3-text-teal w3-col m8 l8";
+    link.className = "repo-link w3-button w3-padding w3-text-teal w3-col s8 m8 l8";
     link.setAttribute('onclick', "w3_close();");
 
     var ext_link = document.createElement("a");
@@ -72,7 +72,7 @@ function buildRepositoryRow(id_entry_tuple) {
     ext_link.target = "_blank";
     ext_img.src = ImageUrl.EXTERNAL;
     ext_link.appendChild(ext_img);
-    ext_link.className = "w3-button w3-padding w3-text-teal w3-hover-opacity w3-col m2 l2";
+    ext_link.className = "w3-button w3-padding w3-text-teal w3-hover-opacity w3-col s2 m2 l2";
 
     var pin_span = document.createElement("span");
     var pin_img = document.createElement("img");
@@ -80,7 +80,7 @@ function buildRepositoryRow(id_entry_tuple) {
     pin_span.appendChild(pin_img);
     pin_span.setAttribute('onclick', 'Pinned.addOrRemove(' + id + ');');
 
-    pin_span.className = "w3-button w3-padding w3-text-teal w3-hover-opacity w3-col m2 l2";
+    pin_span.className = "w3-button w3-padding w3-text-teal w3-hover-opacity w3-col s2 m2 l2";
     $(pin_span).on('click', $.proxy(Pinned.addOrRemove, this));
     var div = document.createElement("div");
     div.className = "w3-row";
