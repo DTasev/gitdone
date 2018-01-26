@@ -8,7 +8,7 @@ Issues.retrieve = function () {
 Issues.show = function (issues) {
     var elem = document.getElementById("issues-list")
     var newhtml = Issues.makeRows(issues);
-    elem.innerHTML = newhtml + Issues.makeInput();
+    elem.innerHTML = Issues.makeInput() + newhtml;
     // add enter triggers for creating an new issue
     $("#new-issue-title").bind("enterKey", createNewIssue);
     $("#new-issue-title").keyup(function (e) {
@@ -34,7 +34,7 @@ Issues.makeRows = function (json_data) {
 
 Issues.makeInput = function () {
     var outer_div = document.createElement("div");
-    outer_div.className = "w3-row w3-dark-grey w3-padding";
+    outer_div.className = "w3-row w3-dark-grey w3-padding issue-margin-bottom";
     outer_div.innerHTML = '<input class="w3-input w3-border" id="new-issue-title" type="text" placeholder="New issue Title" autofocus /><input class="w3-input w3-border" id="new-issue-body" type="text" placeholder="Details (Optional)" />';
     return outer_div.outerHTML;
 }
