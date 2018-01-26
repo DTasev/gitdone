@@ -3,6 +3,7 @@ function Issues() { }
 Issues.retrieve = function () {
     if (window.location.hash.length > 1) {
         var repositoryUrl = makeRepositoryIssuesUrl(window.location.hash);
+        document.getElementById("repo-name").innerHTML = " - " + window.location.hash.substring(1); // removes the hash
         Github.GET(repositoryUrl, Issues.show);
     }
 }
