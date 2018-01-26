@@ -40,12 +40,16 @@ Github.POST = function (data, url, callback) {
     request.open("POST", url, true);
     request.setRequestHeader("Authorization", "Basic " + auth_basic);
     request.onreadystatechange = function () {
-        if (request.readyState === XMLHttpRequest.DONE && request.status === 201) {
-            callback(JSON.parse(request.responseText));
-            $("#error-message").html("");
-        } else {
-            $("#error-message").html("<p>" + request + "</p>");
+        if (request.readyState === XMLHttpRequest.DONE) {
+            LoadIcon.hide();
+            if (request.status === 201) {
+                callback(JSON.parse(request.responseText));
+                $("#error-message").html("");
+            } else if (request.status !== 204) { // if we got no content back, do nothing
+                $("#error-message").html("<p>" + request + "</p>");
+            }
         }
     };
+    LoadIcon.show();
     request.send(data);
 }
