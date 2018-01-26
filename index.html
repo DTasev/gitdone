@@ -24,9 +24,21 @@
     <!-- Sidebar/menu -->
     <nav class="w3-sidebar w3-collapse w3-white w3-animate-left" style="z-index:3;width:300px;" id="mySidebar">
         <div class="w3-container">
-            <h1>
-                <b>Repositories</b>
-            </h1>
+            <div class="w3-row">
+                <div class="w3-col s2 m2 l2 w3-dropdown-click margin-top-1em">
+                    <button onclick="showRepositoryOptions()" class="w3-button w3-white full-width"><i class="fa fa-ellipsis-v fa-2x" aria-hidden="true"></i></button>
+                    <div id="repository-options" class="w3-dropdown-content w3-bar-block w3-border">
+                        <a href="#" class="w3-bar-item w3-button" onclick="showRepositoryOptions()">Link 1</a>
+                        <a href="#" class="w3-bar-item w3-button" onclick="showRepositoryOptions()">Link 2</a>
+                        <a href="#" class="w3-bar-item w3-button" onclick="showRepositoryOptions()">Link 3</a>
+                    </div>
+                </div>
+                <div class="w3-col s10 m10 l10">
+                    <h1>
+                        <b>Repositories</b>
+                    </h1>
+                </div>
+            </div>
         </div>
         <div class="w3-container">
             <form action="">
@@ -38,10 +50,12 @@
                 </div>
                 <a href="https://github.com/settings/tokens/new" target="_blank">Get API token</a>
             </form>
-            <div id="repo-filter" class="inline-block">
-                <input class="w3-input w3-border" type="text" placeholder="Filter repository names" />
+            <div class="w3-row">
+                <div id="repo-filter" class="w3-col">
+                    <input class="w3-input w3-border" type="text" placeholder="Filter repository names" />
+                </div>
             </div>
-            <div id="error-message" class="inline-block"></div>
+            <div id="error-message" class="w3-row"></div>
         </div>
             <div id="repository-list" class="w3-bar-block">
             </div>
