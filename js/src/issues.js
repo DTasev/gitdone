@@ -1,8 +1,10 @@
 function Issues() { }
 
 Issues.retrieve = function () {
-    var repositoryUrl = makeRepositoryIssuesUrl(window.location.hash);
-    Github.GET(repositoryUrl, Issues.show);
+    if (window.location.hash.length > 1) {
+        var repositoryUrl = makeRepositoryIssuesUrl(window.location.hash);
+        Github.GET(repositoryUrl, Issues.show);
+    }
 }
 
 Issues.show = function (issues) {

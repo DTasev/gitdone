@@ -44,9 +44,7 @@ $(document).ready(function () {
 });
 
 $(window).on('hashchange', function () {
-    if (window.location.hash.length > 1) {
-        Issues.retrieve();
-    }
+    Issues.retrieve();
 });
 
 function createNewIssue() {

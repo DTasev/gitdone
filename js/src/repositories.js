@@ -15,6 +15,8 @@ Repositories.show = function (repositories) {
     var repo_list = document.getElementById("repository-list");
     self.repo_cache = repositories;
     repo_list.innerHTML = Repositories.makeRows(repositories);
+    // it will retrieve any issues, if the URL already contains a hash
+    Issues.retrieve();
 }
 
 Repositories.makeLink = function (address, name) {
