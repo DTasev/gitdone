@@ -48,7 +48,10 @@ Pinned.addOrRemove = function (id) {
         Pinned.remove(chosen_repo);
         $("#repo_" + id + " i")[0].className = 'fa fa-check';
     }
+    // refresh the repository list using cached repositories
     Repositories.retrieve(true);
+    // clear the filter input field
+    document.getElementById('repo-filter').innerHTML='';
 }
 Pinned.reorder = function (rows) {
     let new_rows = [], indices_to_remove = [];
