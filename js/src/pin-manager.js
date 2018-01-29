@@ -51,7 +51,7 @@ Pinned.addOrRemove = function (id) {
     // refresh the repository list using cached repositories
     Repositories.retrieve(true);
     // clear the filter input field
-    document.getElementById('repo-filter').innerHTML='';
+    $('#repo-filter input').val("");
 }
 Pinned.reorder = function (rows) {
     let new_rows = [], indices_to_remove = [];
