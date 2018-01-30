@@ -1,4 +1,9 @@
-function Repositories() {
+import Github from './github';
+import Pinned from './pin-manager';
+import CredentialForm from './credential-form';
+import Issues from './issues';
+
+export default function Repositories() {
     var self = this;
     self.repo_cache = null;
 }

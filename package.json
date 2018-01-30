@@ -1,0 +1,25 @@
+{
+    "name": "gitdone",
+    "version": "1.0.0",
+    "description": "Quickly manage multiple git repositories",
+    "main": "js/dist/bundle.js",
+    "dependencies": {
+        "webpack": "^3.10.0"
+    },
+    "devDependencies": {
+        "clean-webpack-plugin": "^0.1.18"
+    },
+    "scripts": {
+        "test": "echo \"Error: no test specified\" && exit 1"
+    },
+    "repository": {
+        "type": "git",
+        "url": "git+https://github.com/dtasev/gitdone.git"
+    },
+    "author": "",
+    "license": "ISC",
+    "bugs": {
+        "url": "https://github.com/dtasev/gitdone/issues"
+    },
+    "homepage": "https://github.com/dtasev/gitdone#readme"
+}

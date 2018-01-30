@@ -1,4 +1,4 @@
-function LoadIcon() { }
+export default function LoadIcon() { }
 
 LoadIcon.show = function () {
     document.getElementById("loading-icon").hidden = false;

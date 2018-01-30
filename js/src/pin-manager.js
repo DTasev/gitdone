@@ -1,4 +1,7 @@
-function Pinned() { }
+import $ from "../lib/jquery-3.2.1";
+import Repositories from './repositories';
+
+export default function Pinned() { }
 
 Pinned.LOCAL_STORAGE_NAME = "gitdone_pinned";
 

@@ -1,4 +1,7 @@
-function Github() { }
+import $ from "../lib/jquery-3.2.1";
+import LoadIcon from './load-icon.js';
+
+export default function Github() { }
 
 Github.REPOSITORIES_URL = "https://api.github.com/user/repos";
 

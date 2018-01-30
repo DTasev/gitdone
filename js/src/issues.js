@@ -1,4 +1,7 @@
-function Issues() { }
+import $ from "../lib/jquery-3.2.1";
+import Github from './github';
+
+export default function Issues() { }
 
 Issues.retrieve = function () {
     if (window.location.hash.length > 1) {
@@ -12,7 +15,7 @@ Issues.show = function (issues) {
     var elem = document.getElementById("issues-list");
     var newhtml = Issues.makeRows(issues);
     elem.innerHTML = Issues.makeInput() + newhtml;
-    
+
     // add enter triggers for creating an new issue
     $("#new-issue-title").bind("enterKey", createNewIssue);
     $("#new-issue-title").keyup(function (e) {
