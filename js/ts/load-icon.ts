@@ -6,4 +6,3 @@ export default class LoadIcon {
         document.getElementById("loading-icon").hidden = true;
     }
 }
-//# sourceMappingURL=load-icon.js.map
