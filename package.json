@@ -13,7 +13,7 @@
     },
     "scripts": {
         "test": "echo \"Error: no test specified\" && exit 1",
-        "build": "webpack --config webpack.prod.js && touch js/dist/prod_build",
+        "build": "webpack --config webpack.prod.js && git ls-files -s js/dist/bundle.js > js/dist/prod_build",
         "watch": "webpack --config webpack.dev.js --watch"
     },
     "repository": {
