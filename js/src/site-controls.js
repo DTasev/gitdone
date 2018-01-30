@@ -1,4 +1,4 @@
-import CredentialForm from './credential-form';
+import CredentialForm from './credential-formts';
 
 // Script to open and close sidebar
 function w3_open() {

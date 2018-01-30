@@ -8,6 +8,7 @@ module.exports = {
         './js/src/pin-manager.js',
     ],
     plugins: [new CleanWebpackPlugin(['js/dist'])],
+    devtool: 'inline-source-map',
     output: {
         filename: 'bundle.js',
         path: path.resolve(__dirname, 'js/dist'),
