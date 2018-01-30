@@ -1,9 +1,6 @@
 import $ from "../lib/jquery-3.2.1";
-import Repositories from './repositoriests';
-
+import Repositories from './repositories';
 export default class Pinned {
-    static LOCAL_STORAGE_NAME = "gitdone_pinned";
-
     static get() {
         // add the comma at the end, to make sure the last entry does not
         // fail comparison for presence, simply because it doesn't have the
@@ -11,7 +8,6 @@ export default class Pinned {
         // but now it will be "apples,rails," and the check will be correct
         return window.localStorage.getItem(Pinned.LOCAL_STORAGE_NAME) + ',';
     }
-
     static getList() {
         let current = window.localStorage.getItem(Pinned.LOCAL_STORAGE_NAME);
         if (current) {
@@ -19,23 +15,21 @@ export default class Pinned {
         }
         return null;
     }
-
     static add(name, append = true) {
         const current = window.localStorage.getItem(Pinned.LOCAL_STORAGE_NAME);
         if (current && append) {
             window.localStorage.setItem(Pinned.LOCAL_STORAGE_NAME, [current, name].join(','));
-        } else {
+        }
+        else {
             window.localStorage.setItem(Pinned.LOCAL_STORAGE_NAME, name);
         }
     }
-
     static remove(to_be_removed) {
         let current = Pinned.getList();
         current.splice(current.indexOf(to_be_removed), 1);
         // overwrite the existing entry
         Pinned.add(current, false);
     }
-
     static addOrRemove(id) {
         let chosen_repo = $("#repo_" + id + " a")[0].text;
         let current = Pinned.get();
@@ -46,7 +40,8 @@ export default class Pinned {
         if (!current || current.indexOf(chosen_repo + ',') == -1) {
             Pinned.add(chosen_repo);
             $("#repo_" + id + " i")[0].className = 'fa fa-thumb-tack';
-        } else {
+        }
+        else {
             Pinned.remove(chosen_repo);
             $("#repo_" + id + " i")[0].className = 'fa fa-check';
         }
@@ -63,7 +58,6 @@ export default class Pinned {
             return rows;
         }
         let elemenets_to_append = current.length;
-
         // iterate through each row
         let ind, row, row_text;
         for (let row_tuple of rows.entries()) {
@@ -71,10 +65,9 @@ export default class Pinned {
             // get the text from the <a> element
             row = row_tuple[1];
             row_text = row.children[0].text;
-
             // check if the repository is pinned
             for (let pinned of current) {
-                if (row_text === pinned) { // if this is the pinned repository
+                if (row_text === pinned) {
                     // change the pin icon to pinned
                     row.children[1].children[0].className = 'fa fa-check';
                     // store the changed row
@@ -91,7 +84,6 @@ export default class Pinned {
                 break;
             }
         }
-
         // remove the rows form the original list in reverse order
         // because the repositories are first traversed in ascending (increasing) order
         // we have to remove them in reverse, otherwise elements will be skipped:
@@ -104,3 +96,5 @@ export default class Pinned {
         return new_rows.concat(rows);
     }
 }
+Pinned.LOCAL_STORAGE_NAME = "gitdone_pinned";
+//# sourceMappingURL=pin-manager.js.map

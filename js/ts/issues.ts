@@ -1,5 +1,5 @@
 import $ from "../lib/jquery-3.2.1";
-import Github from './githubts';
+import Github from './github';
 
 export default class Issues {
     private static makeRepositoryIssuesUrl(hash) {

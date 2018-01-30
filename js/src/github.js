@@ -1,11 +1,7 @@
 import $ from "../lib/jquery-3.2.1";
-import LoadIcon from './load-iconts';
-
-export default class GithubTS {
-
-    public static REPOSITORIES_URL = "https://api.github.com/user/repos";
-
-    public static GET(url, callback) {
+import LoadIcon from './load-icon';
+export default class Github {
+    static GET(url, callback) {
         let request = new XMLHttpRequest();
         const api_key = $("#api-key input").val();
         if (api_key === "") {
@@ -23,21 +19,20 @@ export default class GithubTS {
                 if (request.status === 200) {
                     callback(JSON.parse(request.responseText));
                     $("#error-message").html("");
-                } else if (request.status !== 204) { // if we got no content back, do nothing
+                }
+                else if (request.status !== 204) {
                     let error_message = "";
                     if (request.responseText) {
-                        error_message = JSON.parse(request.responseText)["message"]
+                        error_message = JSON.parse(request.responseText)["message"];
                     }
                     $("#error-message").html("<p>" + request.status + " " + error_message + "</p>");
                 }
             }
         };
-
         LoadIcon.show();
         request.send(null);
     }
-
-    public static POST(data, url, callback) {
+    static POST(data, url, callback) {
         let request = new XMLHttpRequest();
         let auth_basic = window.btoa($("#username input").val() + ":" + $("#api-key input").val());
         request.open("POST", url, true);
@@ -48,7 +43,8 @@ export default class GithubTS {
                 if (request.status === 201) {
                     callback(JSON.parse(request.responseText));
                     $("#error-message").html("");
-                } else if (request.status !== 204) { // if we got no content back, do nothing
+                }
+                else if (request.status !== 204) {
                     $("#error-message").html("<p>" + request + "</p>");
                 }
             }
@@ -57,3 +53,5 @@ export default class GithubTS {
         request.send(data);
     }
 }
+Github.REPOSITORIES_URL = "https://api.github.com/user/repos";
+//# sourceMappingURL=github.js.map

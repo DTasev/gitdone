@@ -1,10 +1,13 @@
 import $ from "../lib/jquery-3.2.1";
-// import Github from './github';
-import Github from './githubts';
-import Repositories from './repositoriests';
-import Issues from './issuests';
-import Pinned from './pin-managerts'
+import Github from './github';
+import Repositories from './repositories';
+import Issues from './issues';
+
+// Global objects, accessible to the HTML
+import Pinned from './pin-manager';
 window.Pinned = Pinned;
+import Controls from './site-controls';
+window.Controls = Controls;
 
 $(document).on('keyup', "#repo-filter input", $.proxy(Repositories.filterRepositories, this));
 $("#api-key").on('change', function () {

@@ -1,5 +1,5 @@
 import $ from "../lib/jquery-3.2.1";
-import Github from './githubts';
+import Github from './github';
 export default class Issues {
     static makeRepositoryIssuesUrl(hash) {
         return "https://api.github.com/repos/" + hash.substring(1) + "/issues";
@@ -69,4 +69,4 @@ Issues.makeLinkOpenInNewTab = function (address, name) {
     elem_a.appendChild(document.createTextNode(name));
     return elem_a;
 };
-//# sourceMappingURL=issuests.js.map
+//# sourceMappingURL=issues.js.map

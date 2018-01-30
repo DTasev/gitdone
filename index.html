@@ -26,11 +26,11 @@
         <div class="w3-container">
             <div class="w3-row">
                 <div class="w3-col s2 m2 l2 w3-dropdown-click margin-top-1em">
-                    <button onclick="showRepositoryOptions()" class="w3-button w3-white full-width"><i class="fa fa-ellipsis-v fa-2x" aria-hidden="true"></i></button>
+                    <button onclick="Controls.showRepositoryOptions()" class="w3-button w3-white full-width"><i class="fa fa-ellipsis-v fa-2x" aria-hidden="true"></i></button>
                     <div id="repository-options" class="w3-dropdown-content w3-bar-block w3-border">
-                        <a class="w3-bar-item w3-button" onclick="showCredentials()">Show credentials</a>
-                        <a href="#" class="w3-bar-item w3-button" onclick="showRepositoryOptions()">Link 2</a>
-                        <a href="#" class="w3-bar-item w3-button" onclick="showRepositoryOptions()">Link 3</a>
+                        <a class="w3-bar-item w3-button" onclick="Controls.showCredentials()">Show credentials</a>
+                        <a class="w3-bar-item w3-button" onclick="Controls.showRepositoryOptions()">Link 2</a>
+                        <a class="w3-bar-item w3-button" onclick="Controls.showRepositoryOptions()">Link 3</a>
                     </div>
                 </div>
                 <div class="w3-col s10 m10 l10">
@@ -83,7 +83,7 @@
             <a href="#">
                 <img src="/w3images/avatar_g2.jpg" style="width:65px;" class="w3-circle w3-right w3-margin w3-hide-large w3-hover-opacity">
             </a>
-            <span class="w3-button w3-hide-large w3-xxlarge w3-hover-text-grey" onclick="w3_open()">
+            <span class="w3-button w3-hide-large w3-xxlarge w3-hover-text-grey" onclick="Controls.w3_open()">
                 <i class="fa fa-bars"></i>
             </span>
             <div class="w3-container">

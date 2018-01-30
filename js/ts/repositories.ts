@@ -1,8 +1,8 @@
 import $ from "../lib/jquery-3.2.1";
-import Github from './githubts';
-import Pinned from './pin-managerts';
-import CredentialForm from './credential-formts';
-import Issues from './issuests';
+import Github from './github';
+import Pinned from './pin-manager';
+import CredentialForm from './credential-form';
+import Issues from './issues';
 
 export default class Repositories {
     static repo_cache = null;
@@ -49,7 +49,7 @@ export default class Repositories {
 
         var link = Repositories.makeLink("#" + entry["full_name"], entry["name"]);
         link.className = "repo-link w3-button w3-padding w3-text-teal w3-col s8 m8 l8";
-        link.setAttribute('onclick', "w3_close();");
+        link.setAttribute('onclick', "Controls.w3_close();");
 
         var ext_link = document.createElement("a");
         var ext_font_awesome = document.createElement("i");

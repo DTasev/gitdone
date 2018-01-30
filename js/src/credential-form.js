@@ -6,4 +6,4 @@ export default class CredentialForm {
         document.getElementById("user-credential-form").hidden = true;
     }
 }
-//# sourceMappingURL=credential-formts.js.map
+//# sourceMappingURL=credential-form.js.map
