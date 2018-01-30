@@ -5,8 +5,9 @@ module.exports = {
     entry: [
         './js/src/main.js',
     ],
-    plugins: [new CleanWebpackPlugin(['js/dist'])],
-    devtool: 'inline-source-map',
+    plugins: [
+        new CleanWebpackPlugin(['js/dist'])
+    ],
     output: {
         filename: 'bundle.js',
         path: path.resolve(__dirname, 'js/dist'),
