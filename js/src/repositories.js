@@ -17,6 +17,8 @@ Repositories.show = function (repositories) {
     repo_list.innerHTML = Repositories.makeRows(repositories);
     // it will retrieve any issues, if the URL already contains a hash
     Issues.retrieve();
+    // hide the credential form after a successful authentication
+    CredentialForm.hide();
 }
 
 Repositories.makeLink = function (address, name) {

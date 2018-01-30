@@ -17,3 +17,8 @@ function showRepositoryOptions() {
         x.className = x.className.replace(" w3-show", "");
     }
 }
+
+function showCredentials(){
+    CredentialForm.show();
+    showRepositoryOptions();
+}

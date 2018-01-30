@@ -28,7 +28,7 @@
                 <div class="w3-col s2 m2 l2 w3-dropdown-click margin-top-1em">
                     <button onclick="showRepositoryOptions()" class="w3-button w3-white full-width"><i class="fa fa-ellipsis-v fa-2x" aria-hidden="true"></i></button>
                     <div id="repository-options" class="w3-dropdown-content w3-bar-block w3-border">
-                        <a href="#" class="w3-bar-item w3-button" onclick="showRepositoryOptions()">Link 1</a>
+                        <a class="w3-bar-item w3-button" onclick="showCredentials()">Show credentials</a>
                         <a href="#" class="w3-bar-item w3-button" onclick="showRepositoryOptions()">Link 2</a>
                         <a href="#" class="w3-bar-item w3-button" onclick="showRepositoryOptions()">Link 3</a>
                     </div>
@@ -41,7 +41,7 @@
             </div>
         </div>
         <div class="w3-container">
-            <form action="">
+            <form id="user-credential-form" action="">
                 <div id="username">
                     <input class="w3-input w3-border" type="text" placeholder="Username" value="DTasev" name="username" />
                 </div>
@@ -113,6 +113,7 @@
     <script src="js/lib/jquery-3.2.1.js "></script>
     <script src="js/src/site-controls.js"></script>
     <script src="js/src/load-icon.js "></script>
+    <script src="js/src/credential-form.js "></script>
     <script src="js/src/pin-manager.js "></script>
     <script src="js/src/github.js "></script>
     <script src="js/src/image-urls.js "></script>
