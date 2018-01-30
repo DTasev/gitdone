@@ -1,17 +1,18 @@
 import CredentialForm from './credential-formts';
 
+// TODO move to Typescript object with static functions, and import in main.js then do window.<class> = <class>
 // Script to open and close sidebar
 function w3_open() {
     document.getElementById("mySidebar").style.display = "block";
     document.getElementById("myOverlay").style.display = "block";
 }
 
-export function w3_close() {
+function w3_close() {
     document.getElementById("mySidebar").style.display = "none";
     document.getElementById("myOverlay").style.display = "none";
 }
 
-export function showRepositoryOptions() {
+function showRepositoryOptions() {
     var x = document.getElementById("repository-options");
     if (x.className.indexOf("w3-show") == -1) {
         x.className += " w3-show";
@@ -20,7 +21,7 @@ export function showRepositoryOptions() {
     }
 }
 
-export function showCredentials() {
+function showCredentials() {
     CredentialForm.show();
     showRepositoryOptions();
 }

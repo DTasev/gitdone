@@ -1,6 +1,6 @@
 import $ from "../lib/jquery-3.2.1";
 import Github from './githubts';
-import Pinned from '../src/pin-manager';
+import Pinned from './pin-managerts';
 import CredentialForm from './credential-formts';
 import Issues from './issuests';
 

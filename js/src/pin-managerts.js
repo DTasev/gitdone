@@ -18,7 +18,7 @@ export default class Pinned {
     static add(name, append = true) {
         const current = window.localStorage.getItem(Pinned.LOCAL_STORAGE_NAME);
         if (current && append) {
-            window.localStorage.setItem(Pinned.LOCAL_STORAGE_NAME, [current, name]);
+            window.localStorage.setItem(Pinned.LOCAL_STORAGE_NAME, [current, name].join(','));
         }
         else {
             window.localStorage.setItem(Pinned.LOCAL_STORAGE_NAME, name);
