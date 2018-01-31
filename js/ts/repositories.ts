@@ -3,6 +3,7 @@ import Github from './github';
 import Pinned from './pin-manager';
 import CredentialForm from './credential-form';
 import Issues from './issues';
+import Milestones from './milestones';
 
 export default class Repositories {
     static repo_cache = null;
@@ -21,9 +22,12 @@ export default class Repositories {
         let repo_list = document.getElementById("repository-list");
         Repositories.repo_cache = repositories;
         repo_list.innerHTML = Repositories.makeRows(repositories);
+
         // it will retrieve any issues, if the URL already contains a hash
+        // this can happen if the user reloads the page with a hash already in the URL
         Issues.retrieve();
-        // hide the credential form after a successful authentication
+        Milestones.retrieve();
+        // hide the credential form, only after a successful authentication
         CredentialForm.hide();
     }
 
@@ -49,7 +53,7 @@ export default class Repositories {
 
         var link = Repositories.makeLink("#" + entry["full_name"], entry["name"]);
         link.className = "repo-link w3-button w3-padding w3-text-teal w3-col s8 m8 l8";
-        link.setAttribute('onclick', "Controls.w3_close();");
+        link.setAttribute('onclick', "Controls.w3_close()");
 
         var ext_link = document.createElement("a");
         var ext_font_awesome = document.createElement("i");
@@ -84,7 +88,6 @@ export default class Repositories {
 
         let repo_row_tag = "#repository-list .w3-row";
         if (string.length > 0) {
-            // which tag is captured will have to be changed, if the table is removed
             $(repo_row_tag).each(function (i, v) {
                 if (v.children[0].text.indexOf(string) == -1) {
                     $(this).hide();
