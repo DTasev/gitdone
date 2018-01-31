@@ -11,6 +11,7 @@ export default class Issues {
     }
 
     static createNewIssue() {
+        // TODO add milestone
         var data = {
             "title": $("#new-issue-title").val(),
             "body": $("#new-issue-body").val()
@@ -84,7 +85,7 @@ export default class Issues {
         // is done by the Milestones object
         let milestone_button = document.createElement("button");
         milestone_button.className = "w3-button w3-dark-gray full-width";
-        milestone_button.setAttribute("onclick", "Controls.showMilestones()");
+        milestone_button.setAttribute("onclick", "Controls.toggleMilestones()");
 
         let font_awesome_button_image = document.createElement("i");
         font_awesome_button_image.className = "fa fa-map-signs fa-1x";

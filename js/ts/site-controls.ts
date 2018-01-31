@@ -1,5 +1,6 @@
 import CredentialForm from './credential-form';
 import Issues from './issues';
+import Milestones from './milestones';
 
 export default class Controls {
     static w3_open() {
@@ -12,7 +13,7 @@ export default class Controls {
         document.getElementById("myOverlay").style.display = "none";
     }
 
-    static showRepositoryOptions() {
+    static toggleRepositoryOptions() {
         var x = document.getElementById("repository-options");
         if (x.className.indexOf("w3-show") == -1) {
             x.className += " w3-show";
@@ -23,15 +24,18 @@ export default class Controls {
 
     static showCredentials() {
         CredentialForm.show();
-        Controls.showRepositoryOptions();
+        Controls.toggleRepositoryOptions();
     }
 
-    static showMilestones() {
+    static toggleMilestones() {
         var x = document.getElementById(Issues.ID_NEW_ISSUE_MILESTONES);
         if (x.className.indexOf("w3-show") == -1) {
             x.className += " w3-show";
         } else {
             x.className = x.className.replace(" w3-show", "");
         }
+    }
+    static toggleMilestone(id: number) {
+        Milestones.toggleMilestone(id);
     }
 }
