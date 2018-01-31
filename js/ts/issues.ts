@@ -1,5 +1,6 @@
 import $ from "../lib/jquery-3.2.1";
 import Github from './github';
+import Milestones from './milestones';
 
 export default class Issues {
     static ID_NEW_ISSUE_TITLE = "new-issue-title";
@@ -11,10 +12,12 @@ export default class Issues {
     }
 
     static createNewIssue() {
-        // TODO add milestone
+    // TODO add milestone, and remove useless jquery. Also replace hard-coded strings with Issues.ID_...
+
         var data = {
             "title": $("#new-issue-title").val(),
-            "body": $("#new-issue-body").val()
+            "body": $("#new-issue-body").val(),
+            "milestone": document.getElementbyId(Milestones.ID_ACTIVE_MILESTONE).getAttribute("data-milestone-number")
         };
 
         Github.POST(JSON.stringify(data), Issues.makeIssuesUrl(window.location.hash), function (response) {
