@@ -47,8 +47,8 @@ export default class Issues {
 
     static makeRows = function (json_data) {
         var rows = [];
-        for (let entry of json_data.entries()) {
-            rows.push(Issues.buildRow(entry));
+        for (let issue of json_data) {
+            rows.push(Issues.buildRow(issue));
         }
         return rows.join('');
     }
@@ -60,11 +60,10 @@ export default class Issues {
         return outer_div.outerHTML;
     }
 
-    static buildRow = function (id_issue_tuple) {
-        let issue = id_issue_tuple[1];
-        var outer_div = document.createElement("div");
+    static buildRow = function (issue) {
+        let outer_div = document.createElement("div");
         outer_div.className = "w3-row w3-dark-grey issue-margin-bottom";
-        var new_tab_link_a = Issues.makeLinkOpenInNewTab(issue["html_url"], issue["title"] + " #" + issue["number"]);
+        let new_tab_link_a = Issues.makeLinkOpenInNewTab(issue["html_url"], issue["title"] + " #" + issue["number"]);
         new_tab_link_a.className = "issue-link w3-text-sand w3-padding w3-block w3-ripple w3-hover-green";
         outer_div.appendChild(new_tab_link_a);
         return outer_div.outerHTML;
