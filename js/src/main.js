@@ -23,5 +23,4 @@ $(document).ready(function () {
 
 $(window).on('hashchange', function () {
     Issues.retrieve();
-    Milestones.retrieve();
 });

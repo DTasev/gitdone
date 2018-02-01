@@ -18,8 +18,9 @@ export default class Repositories {
         Repositories.repo_cache = repositories;
         repo_list.innerHTML = Repositories.makeRows(repositories);
         // it will retrieve any issues, if the URL already contains a hash
+        // this can happen if the user reloads the page with a hash already in the URL
         Issues.retrieve();
-        // hide the credential form after a successful authentication
+        // hide the credential form, only after a successful authentication
         CredentialForm.hide();
     }
     static makeRows(json_data) {
@@ -41,10 +42,10 @@ export default class Repositories {
         let entry = id_entry_tuple[1];
         var link = Repositories.makeLink("#" + entry["full_name"], entry["name"]);
         link.className = "repo-link w3-button w3-padding w3-text-teal w3-col s8 m8 l8";
-        link.setAttribute('onclick', "Controls.w3_close();");
+        link.setAttribute('onclick', "Controls.w3_close()");
         var ext_link = document.createElement("a");
         var ext_font_awesome = document.createElement("i");
-        ext_font_awesome.className = 'fa fa-external-link';
+        ext_font_awesome.className = 'fas fa-external-link-alt';
         ext_font_awesome.setAttribute("aria-hidden", "true");
         ext_link.href = entry["html_url"];
         ext_link.target = "_blank";
@@ -52,7 +53,7 @@ export default class Repositories {
         ext_link.className = "w3-button w3-padding w3-hover-opacity w3-col s2 m2 l2";
         var pin_span = document.createElement("span");
         var pin_img = document.createElement("i");
-        pin_img.className = 'fa fa-thumb-tack';
+        pin_img.className = 'fas fa-thumbtack';
         pin_img.setAttribute("aria-hidden", "true");
         pin_span.appendChild(pin_img);
         pin_span.setAttribute('onclick', 'Pinned.addOrRemove(' + id + ');');
@@ -70,7 +71,6 @@ export default class Repositories {
         let repo;
         let repo_row_tag = "#repository-list .w3-row";
         if (string.length > 0) {
-            // which tag is captured will have to be changed, if the table is removed
             $(repo_row_tag).each(function (i, v) {
                 if (v.children[0].text.indexOf(string) == -1) {
                     $(this).hide();
