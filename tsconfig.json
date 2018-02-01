@@ -1,4 +1,7 @@
 {
+    "include": [
+        "./js/ts/*"
+    ],
     "compilerOptions": {
         "target": "es6",
         "module": "es6",
