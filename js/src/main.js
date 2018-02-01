@@ -2,6 +2,7 @@ import $ from "../lib/jquery-3.2.1";
 import Github from './github';
 import Repositories from './repositories';
 import Issues from './issues';
+import Milestones from './milestones';
 
 // Global objects, accessible to the HTML
 import Pinned from './pin-manager';

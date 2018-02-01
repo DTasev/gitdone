@@ -1,6 +1,36 @@
 import $ from "../lib/jquery-3.2.1";
 import LoadIcon from './load-icon';
 export default class Github {
+    static formatError(request) {
+        let error_message = "";
+        if (request.responseText) {
+            error_message = JSON.parse(request.responseText)["message"];
+        }
+        return "<p>" + error_message + "</p>";
+    }
+    /**
+     *
+     * @param response The HTTP Response from the server
+     * @param expected_code The expected HTTP code for a successful end
+     * @param callback Callback function
+     */
+    static handleResponse(response, expected_code, callback) {
+        // if the request isn't finished yet, don't do anything
+        // it is possible the callback will trigger, before the request is fully finished
+        if (response.readyState === XMLHttpRequest.DONE) {
+            LoadIcon.hide();
+            if (response.status === expected_code) {
+                callback(JSON.parse(response.responseText));
+                $("#error-message").html("");
+            }
+            else if (response.status === 204) {
+                $("#error-message").html("204 No Content");
+            }
+            else if (response.status !== 204) {
+                $("#error-message").html(Github.formatError(response));
+            }
+        }
+    }
     static GET(url, callback) {
         let request = new XMLHttpRequest();
         const api_key = $("#api-key input").val();
@@ -12,22 +42,8 @@ export default class Github {
         request.open("GET", url, true);
         request.setRequestHeader("Authorization", "Basic " + auth_basic);
         request.onreadystatechange = function () {
-            // if the request isn't finished yet, don't do anything
-            // it is possible the callback will trigger, before the request is fully finished
-            if (request.readyState === XMLHttpRequest.DONE) {
-                LoadIcon.hide();
-                if (request.status === 200) {
-                    callback(JSON.parse(request.responseText));
-                    $("#error-message").html("");
-                }
-                else if (request.status !== 204) {
-                    let error_message = "";
-                    if (request.responseText) {
-                        error_message = JSON.parse(request.responseText)["message"];
-                    }
-                    $("#error-message").html("<p>" + request.status + " " + error_message + "</p>");
-                }
-            }
+            // expecting 200 OK
+            Github.handleResponse(request, 200, callback);
         };
         LoadIcon.show();
         request.send(null);
@@ -38,16 +54,8 @@ export default class Github {
         request.open("POST", url, true);
         request.setRequestHeader("Authorization", "Basic " + auth_basic);
         request.onreadystatechange = function () {
-            if (request.readyState === XMLHttpRequest.DONE) {
-                LoadIcon.hide();
-                if (request.status === 201) {
-                    callback(JSON.parse(request.responseText));
-                    $("#error-message").html("");
-                }
-                else if (request.status !== 204) {
-                    $("#error-message").html("<p>" + request + "</p>");
-                }
-            }
+            // expecting 201 Created
+            Github.handleResponse(request, 201, callback);
         };
         LoadIcon.show();
         request.send(data);
