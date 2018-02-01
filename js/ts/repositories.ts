@@ -56,7 +56,7 @@ export default class Repositories {
 
         var ext_link = document.createElement("a");
         var ext_font_awesome = document.createElement("i");
-        ext_font_awesome.className = 'fa fa-external-link';
+        ext_font_awesome.className = 'fas fa-external-link-alt';
         ext_font_awesome.setAttribute("aria-hidden", "true");
         ext_link.href = entry["html_url"];
         ext_link.target = "_blank";
@@ -65,7 +65,7 @@ export default class Repositories {
 
         var pin_span = document.createElement("span");
         var pin_img = document.createElement("i");
-        pin_img.className = 'fa fa-thumb-tack';
+        pin_img.className = 'fas fa-thumbtack';
         pin_img.setAttribute("aria-hidden", "true");
         pin_span.appendChild(pin_img);
         pin_span.setAttribute('onclick', 'Pinned.addOrRemove(' + id + ');');

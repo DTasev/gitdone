@@ -3,26 +3,30 @@ import Github from './github';
 import Milestones from './milestones';
 
 export default class Issues {
-    static ID_NEW_ISSUE_TITLE = "new-issue-title";
-    static ID_NEW_ISSUE_DETAILS = "new-issue-body";
-    static ID_NEW_ISSUE_MILESTONES_BUTTON = "new-issue-milestones-button";
-    static ID_NEW_ISSUE_MILESTONES_LIST = "new-issue-milestones-list";
+    static readonly ID_NEW_ISSUE_TITLE = "new-issue-title";
+    static readonly ID_NEW_ISSUE_DETAILS = "new-issue-body";
+    static readonly ID_NEW_ISSUE_MILESTONES_BUTTON = "new-issue-milestones-button";
+    static readonly ID_NEW_ISSUE_MILESTONES_LIST = "new-issue-milestones-list";
 
     private static makeIssuesUrl(hash) {
         return "https://api.github.com/repos/" + hash.substring(1) + "/issues";
     }
 
     static createNewIssue() {
-        // TODO add milestone, and remove useless jquery. Also replace hard-coded strings with Issues.ID_...
-        debugger
-        var data = {
-            "title": $(Issues.ID_NEW_ISSUE_TITLE).val(),
-            "body": $(Issues.ID_NEW_ISSUE_DETAILS).val(),
-            "milestone": document.getElementById(Milestones.ID_ACTIVE_MILESTONE).getAttribute("data-milestone-number")
+        let data = {
+            "title": (<HTMLInputElement>document.getElementById(Issues.ID_NEW_ISSUE_TITLE)).value,
+            "body": (<HTMLInputElement>document.getElementById(Issues.ID_NEW_ISSUE_DETAILS)).value,
         };
-        // Github.POST(JSON.stringify(data), Issues.makeIssuesUrl(window.location.hash), function (response) {
-        //     Issues.retrieve();
-        // });
+        // grab the active milestone element
+        let milestone = document.getElementById(Milestones.ID_ACTIVE_MILESTONE);
+        // if no milestone is selected, there will be nothing added to the dictionary.
+        // An empty "milestone" fails Github validation, as it expects to have a number present
+        if (milestone) {
+            data["milestone"] = milestone.dataset.milestoneNumber;
+        }
+        Github.POST(JSON.stringify(data), Issues.makeIssuesUrl(window.location.hash), function (response) {
+            Issues.retrieve();
+        });
     }
 
     static retrieve = function () {
