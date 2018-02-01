@@ -26,7 +26,6 @@ export default class Repositories {
         // it will retrieve any issues, if the URL already contains a hash
         // this can happen if the user reloads the page with a hash already in the URL
         Issues.retrieve();
-        Milestones.retrieve();
         // hide the credential form, only after a successful authentication
         CredentialForm.hide();
     }

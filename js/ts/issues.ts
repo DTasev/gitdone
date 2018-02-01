@@ -5,24 +5,24 @@ import Milestones from './milestones';
 export default class Issues {
     static ID_NEW_ISSUE_TITLE = "new-issue-title";
     static ID_NEW_ISSUE_DETAILS = "new-issue-body";
-    static ID_NEW_ISSUE_MILESTONES = "new-issue-milestones";
+    static ID_NEW_ISSUE_MILESTONES_BUTTON = "new-issue-milestones-button";
+    static ID_NEW_ISSUE_MILESTONES_LIST = "new-issue-milestones-list";
 
     private static makeIssuesUrl(hash) {
         return "https://api.github.com/repos/" + hash.substring(1) + "/issues";
     }
 
     static createNewIssue() {
-    // TODO add milestone, and remove useless jquery. Also replace hard-coded strings with Issues.ID_...
-
+        // TODO add milestone, and remove useless jquery. Also replace hard-coded strings with Issues.ID_...
+        debugger
         var data = {
-            "title": $("#new-issue-title").val(),
-            "body": $("#new-issue-body").val(),
-            "milestone": document.getElementbyId(Milestones.ID_ACTIVE_MILESTONE).getAttribute("data-milestone-number")
+            "title": $(Issues.ID_NEW_ISSUE_TITLE).val(),
+            "body": $(Issues.ID_NEW_ISSUE_DETAILS).val(),
+            "milestone": document.getElementById(Milestones.ID_ACTIVE_MILESTONE).getAttribute("data-milestone-number")
         };
-
-        Github.POST(JSON.stringify(data), Issues.makeIssuesUrl(window.location.hash), function (response) {
-            Issues.retrieve();
-        });
+        // Github.POST(JSON.stringify(data), Issues.makeIssuesUrl(window.location.hash), function (response) {
+        //     Issues.retrieve();
+        // });
     }
 
     static retrieve = function () {
@@ -51,6 +51,10 @@ export default class Issues {
                 $(this).trigger("enterKey");
             }
         });
+
+        // milestones must be retrieved after the issues HTML has been built
+        // otherwise it will fail to find the button where the milestones have to be placed
+        Milestones.retrieve();
     }
 
     static makeRows = function (json_data) {
@@ -80,13 +84,15 @@ export default class Issues {
         outer_div.appendChild(title_input);
         outer_div.appendChild(details_input);
 
-        // drop-down options menu for the issues
+        // options for the issues
         let new_issue_options = document.createElement("div");
-        new_issue_options.className = "w3-dropdown-click";
+        new_issue_options.className = "w3-dropdown-click margin-top-1em";
 
         // milestone button, does not create the actual milestones, this
         // is done by the Milestones object
         let milestone_button = document.createElement("button");
+        // used to change the color of the button, if there is an active milestone
+        milestone_button.id = Issues.ID_NEW_ISSUE_MILESTONES_BUTTON;
         milestone_button.className = "w3-button w3-dark-gray full-width";
         milestone_button.setAttribute("onclick", "Controls.toggleMilestones()");
 
@@ -96,7 +102,7 @@ export default class Issues {
 
         // this just sets up the list for the milestones, it does not actually create them
         let milestones_list = document.createElement("div");
-        milestones_list.id = Issues.ID_NEW_ISSUE_MILESTONES;
+        milestones_list.id = Issues.ID_NEW_ISSUE_MILESTONES_LIST;
         milestones_list.className = "w3-dropdown-content w3-bar-block w3-border";
 
         milestone_button.appendChild(font_awesome_button_image);
