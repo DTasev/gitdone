@@ -18,7 +18,7 @@ export default class Issues {
             "body": (<HTMLInputElement>document.getElementById(Issues.ID_NEW_ISSUE_DETAILS)).value,
         };
         // grab the active milestone element
-        let milestone = document.getElementById(Milestones.ID_ACTIVE_MILESTONE);
+        let milestone = document.getElementById(Milestones.ID_ACTIVE_CHOICE);
         // if no milestone is selected, there will be nothing added to the dictionary.
         // An empty "milestone" fails Github validation, as it expects to have a number present
         if (milestone) {
@@ -29,7 +29,7 @@ export default class Issues {
         });
     }
 
-    static retrieve = function () {
+    static retrieve() {
         if (window.location.hash.length > 1) {
             var repositoryUrl = Issues.makeIssuesUrl(window.location.hash);
             document.getElementById("repo-name").innerHTML = " - " + window.location.hash.substring(1); // removes the hash
@@ -37,10 +37,10 @@ export default class Issues {
         }
     }
 
-    static show = function (issues) {
+    static show(issues) {
         var elem = document.getElementById("issues-list");
-        var newhtml = Issues.makeRows(issues);
-        elem.innerHTML = Issues.makeInput() + newhtml;
+        var all_issues_html = Issues.makeRows(issues);
+        elem.innerHTML = Issues.buildInput().outerHTML + all_issues_html;
 
         // add enter triggers for creating an new issue
         $("#new-issue-title").bind("enterKey", Issues.createNewIssue);
@@ -61,7 +61,7 @@ export default class Issues {
         Milestones.retrieve();
     }
 
-    static makeRows = function (json_data) {
+    static makeRows(json_data) {
         var rows = [];
         for (let issue of json_data) {
             rows.push(Issues.buildRow(issue));
@@ -69,7 +69,10 @@ export default class Issues {
         return rows.join('');
     }
 
-    static makeInput = function () {
+    /**
+     * Build the HTML for the new issue input form.
+     */
+    static buildInput(): HTMLElement {
         var outer_div = document.createElement("div");
         outer_div.className = "w3-row w3-dark-grey w3-padding issue-margin-bottom";
 
@@ -92,33 +95,18 @@ export default class Issues {
         let new_issue_options = document.createElement("div");
         new_issue_options.className = "w3-dropdown-click margin-top-1em";
 
-        // milestone button, does not create the actual milestones, this
-        // is done by the Milestones object
-        let milestone_button = document.createElement("button");
-        // used to change the color of the button, if there is an active milestone
-        milestone_button.id = Issues.ID_NEW_ISSUE_MILESTONES_BUTTON;
-        milestone_button.className = "w3-button w3-dark-gray full-width";
-        milestone_button.setAttribute("onclick", "Controls.toggleMilestones()");
+        let milestone_button = Milestones.buildButton();
+        let milestones_list = Milestones.buildList();
 
-        let font_awesome_button_image = document.createElement("i");
-        font_awesome_button_image.className = "fa fa-map-signs fa-1x";
-        font_awesome_button_image.setAttribute("aria-hidden", "true");
-
-        // this just sets up the list for the milestones, it does not actually create them
-        let milestones_list = document.createElement("div");
-        milestones_list.id = Issues.ID_NEW_ISSUE_MILESTONES_LIST;
-        milestones_list.className = "w3-dropdown-content w3-bar-block w3-border";
-
-        milestone_button.appendChild(font_awesome_button_image);
         new_issue_options.appendChild(milestone_button);
         new_issue_options.appendChild(milestones_list);
 
         outer_div.appendChild(new_issue_options);
 
-        return outer_div.outerHTML;
+        return outer_div;
     }
 
-    static buildRow = function (issue) {
+    static buildRow(issue) {
         // div for the whole row
         let row = document.createElement("div");
         row.className = "w3-row w3-dark-grey issue-margin-bottom";
@@ -133,7 +121,7 @@ export default class Issues {
         return row.outerHTML;
     }
 
-    static makeLinkOpenInNewTab = function (address, name) {
+    static makeLinkOpenInNewTab(address, name) {
         var elem_a = document.createElement('a');
         elem_a.href = encodeURI(address);
         elem_a.target = "_blank";
