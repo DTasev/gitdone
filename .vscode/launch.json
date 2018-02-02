@@ -29,7 +29,7 @@
                 "--timeout",
                 "999999",
                 "--colors",
-                "${file}"
+                "${workspaceFolder}/js/test/*.ts"
             ],
             "internalConsoleOptions": "openOnSessionStart"
         },

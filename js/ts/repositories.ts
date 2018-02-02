@@ -6,6 +6,8 @@ import Issues from './issues';
 import Milestones from './milestones';
 
 export default class Repositories {
+
+    static ID_DISPLAY_REPOSITORY_NAME = "display-repo-name";
     static repo_cache = null;
 
     public static retrieve(use_cached: boolean = false) {

@@ -9,7 +9,6 @@ import Github from "../ts/github";
  * Mock of the Github GET function
  */
 Github.GET = function (repo, callback) {
-    // TODO copy some real milestone data
     let some_real_milestone_data = [
         {
             "url": "https://api.github.com/repos/DTasev/gitdone/milestones/2",
@@ -51,10 +50,12 @@ Github.GET = function (repo, callback) {
             "updated_at": "2018-02-01T15:59:07Z",
             "due_on": null,
             "closed_at": null
-        }];
+        }
+    ];
     // call the callback
     callback(some_real_milestone_data);
 }
+
 function mockMilestonesButton(): HTMLElement {
     let e = Milestones.buildButton();
     document.body.appendChild(e);
@@ -86,20 +87,25 @@ function seedMilestonesList(): HTMLElement {
 
 describe("Milestones", () => {
     afterEach(() => { // clear all html from the document
-        let list = document.getElementById(Issues.ID_NEW_ISSUE_MILESTONES_LIST);
-        if (list) {
-            list.outerHTML = "";
-        }
-        let button = document.getElementById(Issues.ID_NEW_ISSUE_MILESTONES_BUTTON);
-        if (button) {
-            button.outerHTML = "";
-        }
+        document.body.innerHTML = "";
+    })
+    it("should retrieve milestones", () => {
+        let list = mockMilestonesList();
+        window.location.hash = "#DTasev/apples";
+        Milestones.retrieve();
+
+        expect(list.childElementCount).to.equal(2);
+        expect(list.children[0].textContent).to.equal("Apples");
+        expect(list.children[1].textContent).to.equal("Test milestone");
+
+        expect((<HTMLElement>list.children[0]).dataset.milestoneNumber).to.equal('2');
+        expect((<HTMLElement>list.children[1]).dataset.milestoneNumber).to.equal('1');
     })
     it("should correctly create milestones", () => {
-        let e = seedMilestonesList();
+        const e = seedMilestonesList();
 
         for (let i = 0; i < e.childElementCount; ++i) {
-            let current = e.children[i];
+            const current = e.children[i];
             expect(current.textContent).to.equal("apples");
             expect((<HTMLElement>current).dataset.milestoneNumber).to.equal('3');
         }
@@ -127,17 +133,5 @@ describe("Milestones", () => {
         Milestones.markActiveMilestone(id);
         selected = list.children[id];
         expect(selected.id).to.not.equal(Milestones.ID_ACTIVE_CHOICE);
-    })
-    it("should retrieve the data from Github", () => {
-        let list = mockMilestonesList();
-        window.location.hash = "#DTasev/apples";
-        Milestones.retrieve();
-
-        expect(list.childElementCount).to.equal(2);
-        expect(list.children[0].textContent).to.equal("Apples");
-        expect(list.children[1].textContent).to.equal("Test milestone");
-
-        expect((<HTMLElement>list.children[0]).dataset.milestoneNumber).to.equal('2');
-        expect((<HTMLElement>list.children[1]).dataset.milestoneNumber).to.equal('1');
     })
 });
