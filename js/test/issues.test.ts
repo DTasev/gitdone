@@ -7,7 +7,7 @@ import Github from "../ts/github";
 import Milestones from "../ts/milestones";
 import Repositories from "../ts/repositories";
 
-Github.GET = function (url, callback) {
+function mockGithubGet(url, callback) {
     // NOTE: "body" and "user" have been omitted from the data, to shorten the lines, because
     // they are not currently used
     let some_real_issue_data = [{
@@ -76,29 +76,29 @@ function mockIssuesView(): HTMLElement {
 
 describe('Issues', () => {
     beforeEach(() => {
+        Github.GET = mockGithubGet;
         // mock the location hash
         window.location.hash = "#DTasev/apples";
-        this.mock = new Mock();
         this.list = mockIssuesView();
 
         // mock the milestones method called inside issues
-        this.mock.backup(Milestones.retrieve);
-        Milestones.retrieve = () => this.mock.mock();
-    })
+        this.mock = new Mock();
+        this.mock.set(Milestones, Milestones.retrieve);
+    });
     afterEach(() => { // clear all html from the document
         document.body.innerHTML = "";
         // if this is not here, then tests in Milestones will fail
-        Milestones.retrieve = this.mock.restore();
+        this.mock.restore();
         // remove the reference to the element
         this.list = null;
-    })
+    });
     it('should retrieve issues', () => {
         Issues.retrieve();
 
         // we expect 3 elements - 2 is the mock issue data, 1 is the input field
         // Milestones.retrieve = mock.restore();
         expect(this.list.childElementCount).to.equal(3);
-    })
+    });
     it('should show issues correctly', () => {
         Issues.retrieve();
 
@@ -114,8 +114,8 @@ describe('Issues', () => {
         expect(title_input.id).to.equal(Issues.ID_NEW_ISSUE_TITLE);
         expect(details_input.id).to.equal(Issues.ID_NEW_ISSUE_DETAILS);
         // check that the milestones retrieve has been called
-        expect(this.mock.called).to.be.true;
-    })
+        expect(this.mock.called.once()).to.be.true;
+    });
     it('should set up the elements for milestones', () => {
         Issues.retrieve();
 
@@ -134,6 +134,6 @@ describe('Issues', () => {
         expect(milestones_button.id).to.equal(Issues.ID_NEW_ISSUE_MILESTONES_BUTTON);
         expect(milestones_list.id).to.equal(Issues.ID_NEW_ISSUE_MILESTONES_LIST);
         // check that the milestones retrieve has been called
-        expect(this.mock.called).to.be.true;
-    })
+        expect(this.mock.called.once()).to.be.true;
+    });
 });

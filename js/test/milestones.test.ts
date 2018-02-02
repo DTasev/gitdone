@@ -8,7 +8,7 @@ import Github from "../ts/github";
 /**
  * Mock of the Github GET function
  */
-Github.GET = function (repo, callback) {
+function mockGithubGet(repo, callback) {
     let some_real_milestone_data = [
         {
             "url": "https://api.github.com/repos/DTasev/gitdone/milestones/2",
@@ -86,6 +86,9 @@ function seedMilestonesList(): HTMLElement {
 }
 
 describe("Milestones", () => {
+    beforeEach(() => {
+        Github.GET = mockGithubGet;
+    })
     afterEach(() => { // clear all html from the document
         document.body.innerHTML = "";
     })
