@@ -7,9 +7,12 @@ import Github from "../ts/github";
 import Milestones from "../ts/milestones";
 import Repositories from "../ts/repositories";
 
+const ISSUE_1_BODY = "I eat apples";
+const ISSUE_2_BODY = "Oranges are orange";
+
 function mockGithubGet(url, callback) {
-    // NOTE: "body" and "user" have been omitted from the data, to shorten the lines, because
-    // they are not currently used
+    // NOTE: "user" has been omitted from the data, to shorten the lines, because
+    // it is not currently used
     let some_real_issue_data = [{
         "url": "https://api.github.com/repos/DTasev/gitdone/issues/67",
         "repository_url": "https://api.github.com/repos/DTasev/gitdone",
@@ -31,6 +34,7 @@ function mockGithubGet(url, callback) {
         "updated_at": "2018-02-01T16:18:06Z",
         "closed_at": null,
         "author_association": "OWNER",
+        "body": ISSUE_1_BODY
     },
     {
         "url": "https://api.github.com/repos/DTasev/gitdone/issues/59",
@@ -53,6 +57,7 @@ function mockGithubGet(url, callback) {
         "updated_at": "2018-02-01T14:55:14Z",
         "closed_at": null,
         "author_association": "OWNER",
+        "body": ISSUE_2_BODY
     }];
     callback(some_real_issue_data);
 }
@@ -63,7 +68,7 @@ function mockGithubGet(url, callback) {
  * 
  * @returns The list element that will contain the issues 
  */
-function mockIssuesView(): HTMLElement {
+function mockIssuesView(): HTMLDivElement {
     const repo_name = document.createElement("b");
     repo_name.id = Repositories.ID_DISPLAY_REPOSITORY_NAME;
     document.body.appendChild(repo_name);
@@ -75,56 +80,58 @@ function mockIssuesView(): HTMLElement {
 }
 
 describe('Issues', () => {
+    let list: HTMLDivElement;
+    let milestone_mock: Mock;
     beforeEach(() => {
         Github.GET = mockGithubGet;
         // mock the location hash
         window.location.hash = "#DTasev/apples";
-        this.list = mockIssuesView();
+        list = mockIssuesView();
 
         // mock the milestones method called inside issues
-        this.mock = new Mock();
-        this.mock.set(Milestones, Milestones.retrieve);
+        milestone_mock = new Mock();
+        milestone_mock.set(Milestones, Milestones.retrieve);
     });
     afterEach(() => { // clear all html from the document
         document.body.innerHTML = "";
         // if this is not here, then tests in Milestones will fail
-        this.mock.restore();
+        milestone_mock.restore();
         // remove the reference to the element
-        this.list = null;
+        list = null;
     });
     it('should retrieve issues', () => {
         Issues.retrieve();
 
         // we expect 3 elements - 2 is the mock issue data, 1 is the input field
         // Milestones.retrieve = mock.restore();
-        expect(this.list.childElementCount).to.equal(3);
+        expect(list.childElementCount).to.equal(3);
     });
     it('should show issues correctly', () => {
         Issues.retrieve();
 
         // we expect 3 elements - 2 is the mock issue data, 1 is the input field
         // Milestones.retrieve = mock.restore();
-        expect(this.list.childElementCount).to.equal(3);
+        expect(list.childElementCount).to.equal(3);
 
         // the first one will be the new issue input fields
-        const input_fields: HTMLElement = <HTMLElement>this.list.children[0];
+        const input_fields: HTMLElement = <HTMLElement>list.children[0];
         const title_input = input_fields.children[0];
         const details_input = input_fields.children[1];
 
         expect(title_input.id).to.equal(Issues.ID_NEW_ISSUE_TITLE);
         expect(details_input.id).to.equal(Issues.ID_NEW_ISSUE_DETAILS);
         // check that the milestones retrieve has been called
-        expect(this.mock.called.once()).to.be.true;
+        expect(milestone_mock.called.once()).to.be.true;
     });
     it('should set up the elements for milestones', () => {
         Issues.retrieve();
 
         // we expect 3 elements - 2 is the mock issue data, 1 is the input field
         // Milestones.retrieve = mock.restore();
-        expect(this.list.childElementCount).to.equal(3);
+        expect(list.childElementCount).to.equal(3);
 
         // the first one will be the new issue input fields
-        const input_fields: HTMLElement = <HTMLElement>this.list.children[0];
+        const input_fields: HTMLElement = <HTMLElement>list.children[0];
 
         // just checking that the elements necessary for the milestones are correctly added
         const milestones_div = input_fields.children[2];
@@ -134,6 +141,21 @@ describe('Issues', () => {
         expect(milestones_button.id).to.equal(Issues.ID_NEW_ISSUE_MILESTONES_BUTTON);
         expect(milestones_list.id).to.equal(Issues.ID_NEW_ISSUE_MILESTONES_LIST);
         // check that the milestones retrieve has been called
-        expect(this.mock.called.once()).to.be.true;
+        expect(milestone_mock.called.once()).to.be.true;
     });
+    it('should show issue detials as tooltip', () => {
+        Issues.retrieve();
+
+        // children[1] retrieves the the div from the whole list, children[0] then gets
+        // the contents of the div itself, which is an anchor tag
+        const issue_field_1: HTMLDivElement = <HTMLDivElement>list.children[1].children[0];
+        // check that the anchor tag (children[0]) contains the proper title
+        expect((<HTMLAnchorElement>issue_field_1.children[0]).title).to.equal(ISSUE_1_BODY);
+
+        const issue_field_2: HTMLDivElement = <HTMLDivElement>list.children[2].children[0];
+        expect((<HTMLAnchorElement>issue_field_2.children[0]).title).to.equal(ISSUE_2_BODY);
+
+
+
+    })
 });

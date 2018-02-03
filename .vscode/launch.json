@@ -6,12 +6,6 @@
     "configurations": [
         {
             "type": "node",
-            "request": "attach",
-            "name": "Mocha Attach",
-            "port": 5858
-        },
-        {
-            "type": "node",
             "request": "launch",
             "name": "Mocha Tests",
             "env": {

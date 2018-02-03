@@ -128,6 +128,7 @@ export default class Issues {
         const issue_col = document.createElement("div");
         const issue_link = Issues.buildLinkOpenInNewTab(issue["html_url"], issue["title"] + " #" + issue["number"]);
         issue_link.className = "issue-link w3-text-sand w3-padding w3-block w3-ripple w3-hover-green";
+        issue_link.title = issue["body"];
         issue_col.appendChild(issue_link);
 
         row.appendChild(issue_col);
