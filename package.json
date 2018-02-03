@@ -1,5 +1,5 @@
 {
-    "name": "gitdone",
+    "name": "quickhub",
     "version": "1.0.0",
     "description": "Quickly manage multiple git repositories",
     "main": "js/dist/bundle.js",
@@ -25,12 +25,12 @@
     },
     "repository": {
         "type": "git",
-        "url": "git+https://github.com/dtasev/gitdone.git"
+        "url": "git+https://github.com/dtasev/quickhub.git"
     },
     "author": "Dimitar Tasev",
     "license": "ISC",
     "bugs": {
-        "url": "https://github.com/dtasev/gitdone/issues"
+        "url": "https://github.com/dtasev/quickhub/issues"
     },
-    "homepage": "https://github.com/dtasev/gitdone#readme"
+    "homepage": "https://github.com/dtasev/quickhub#readme"
 }
