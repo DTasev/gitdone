@@ -2,7 +2,7 @@ import * as $ from "../lib/jquery-3.2.1";
 import Repositories from './repositories';
 
 export default class Pinned {
-    static LOCAL_STORAGE_NAME = "gitdone_pinned";
+    static LOCAL_STORAGE_NAME = "quickhub_pinned";
 
     private static get() {
         // add the comma at the end, to make sure the last entry does not
