@@ -84,7 +84,7 @@ export default class Repositories {
     }
 
     static filterRepositories(e) {
-        const filter_string = $("#" + Repositories.ID_REPO_FILTER + "input").val().toLowerCase();
+        const filter_string = $("#" + Repositories.ID_REPO_FILTER + " input").val().toLowerCase();
         const repo_row_tag = "#" + Repositories.ID_REPOSITORY_LIST + ".w3-row";
 
         if (filter_string.length > 0) {
