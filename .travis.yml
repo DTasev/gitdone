@@ -3,5 +3,6 @@ node_js:
 - "8.9.4"
 before_install:
 - cd $TRAVIS_BUILD_DIR
+- export TS_NODE_COMPILER_OPTIONS={\"module\":\"commonjs\"}
 script:
 - npm run test
