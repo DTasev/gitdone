@@ -154,8 +154,5 @@ describe('Issues', () => {
 
         const issue_field_2: HTMLDivElement = <HTMLDivElement>list.children[2].children[0];
         expect((<HTMLAnchorElement>issue_field_2.children[0]).title).to.equal(ISSUE_2_BODY);
-
-
-
     })
 });
