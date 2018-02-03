@@ -3,7 +3,7 @@ import LoadIcon from './load-icon';
 
 type ResponseCallbackFunction = (x: any) => void;
 export default class Github {
-    public static REPOSITORIES_URL = "https://api.github.com/user/repos";
+    public static REPOSITORIES_URL = "https://api.github.com/user/repos?per_page=100";
     private static formatError(request): string {
         let error_message = "";
 
