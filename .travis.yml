@@ -2,6 +2,6 @@ language: node_js
 node_js:
 - "8.9.4"
 before_install:
-- cd $TRAVIS_BUILD_DIR && npm install
+- cd $TRAVIS_BUILD_DIR
 script:
 - npm run test
