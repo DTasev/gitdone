@@ -36,7 +36,7 @@ export default class Repositories {
     }
 
     private static makeRows(json_data) {
-        let rows = [];
+        let rows: Array<HTMLDivElement> = [];
         for (const [id, repository] of json_data.entries()) {
             rows.push(Repositories.buildRow(id, repository));
         }
@@ -70,7 +70,7 @@ export default class Repositories {
         pin_img.className = 'fas fa-thumbtack';
         pin_img.setAttribute("aria-hidden", "true");
         pin_span.appendChild(pin_img);
-        pin_span.setAttribute('onclick', 'Pinned.addOrRemove(' + id + ');');
+        pin_span.setAttribute('onclick', 'Pinned.toggle(' + id + ');');
         pin_span.className = "w3-button w3-padding w3-hover-opacity w3-col s2 m2 l2";
 
         const div = document.createElement("div");
