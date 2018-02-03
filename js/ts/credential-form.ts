@@ -1,10 +1,11 @@
 export default class CredentialForm {
+    static ID_CREDENTIAL_FORM = "user-credential-form";
     static show() {
-        document.getElementById("user-credential-form").hidden = false;
+        document.getElementById(CredentialForm.ID_CREDENTIAL_FORM).hidden = false;
     }
 
 
     static hide() {
-        document.getElementById("user-credential-form").hidden = true;
+        document.getElementById(CredentialForm.ID_CREDENTIAL_FORM).hidden = true;
     }
 }

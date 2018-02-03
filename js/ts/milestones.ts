@@ -3,7 +3,15 @@ import Issues from './issues';
 import Controls from './site-controls';
 
 export default class Milestones {
-    static readonly ID_ACTIVE_MILESTONE = "active-milestone";
+    // the ID of the chosen milestone
+    static readonly ID_ACTIVE_CHOICE = "active-milestone";
+    // the class that is added to distinguish the chosen milestone 
+    static readonly CLASS_ACTIVE_CHOICE = "w3-light-green"
+    // the class that the button has when no milestone is chosen
+    static readonly CLASS_BUTTON_NO_MILESTONE = "w3-dark-gray";
+    // the class that replaces the no milestone, when a milestone is chosen
+    static readonly CLASS_BUTTON_ACTIVE = "w3-green";
+
     private static makeMilestonesUrl(hash) {
         return "https://api.github.com/repos/" + hash.substring(1) + "/milestones";
     }
@@ -33,7 +41,7 @@ export default class Milestones {
     static markActiveMilestone(id: number): void {
         const milestones_list = document.getElementById(Issues.ID_NEW_ISSUE_MILESTONES_LIST);
         const milestones_length = milestones_list.children.length;
-        const active_milestone_class = "w3-light-green";
+        const active_milestone_class = Milestones.CLASS_ACTIVE_CHOICE;
 
         // iterate over each milestone, mark the selected one as active, 
         // and remove the active attributes (if present) from the rest. This essentially brute force
@@ -45,7 +53,7 @@ export default class Milestones {
             // then mark the current one as active
             if (current_idx == id && current.className.indexOf(active_milestone_class) == -1) {
                 current.className += " " + active_milestone_class;
-                current.id = Milestones.ID_ACTIVE_MILESTONE;
+                current.id = Milestones.ID_ACTIVE_CHOICE;
             } else {
                 // if already marked, or not the selected one, remove the active attributes
                 current.className = current.className.replace(" " + active_milestone_class, "");
@@ -67,19 +75,44 @@ export default class Milestones {
         }
     }
 
-    static toggleButtonActiveVisual(enabled: boolean): void {
+    private static toggleButtonActiveVisual(enabled: boolean): void {
         const milestone_button = document.getElementById(Issues.ID_NEW_ISSUE_MILESTONES_BUTTON);
-        const disabled_milestone_button_class: string = "w3-dark-gray";
-        const active_milestone_button_class: string = "w3-green";
         if (enabled) {
             // only add the class if it is not already marked as enabled
             // the button can be marked if a previous milestone was selected, 
             // and then another milestone was clicked
-            if (milestone_button.className.indexOf(active_milestone_button_class) == -1) {
-                milestone_button.className = milestone_button.className.replace(disabled_milestone_button_class, active_milestone_button_class);
+            if (milestone_button.className.indexOf(Milestones.CLASS_BUTTON_ACTIVE) == -1) {
+                milestone_button.className = milestone_button.className.replace(
+                    Milestones.CLASS_BUTTON_NO_MILESTONE, Milestones.CLASS_BUTTON_ACTIVE);
             }
         } else {
-            milestone_button.className = milestone_button.className.replace(active_milestone_button_class, disabled_milestone_button_class);
+            milestone_button.className = milestone_button.className.replace(
+                Milestones.CLASS_BUTTON_ACTIVE, Milestones.CLASS_BUTTON_NO_MILESTONE);
         }
+    }
+
+    static buildButton(): HTMLElement {
+        // milestone button, does not create the actual milestones, this
+        // is done by the Milestones object
+        let milestone_button = document.createElement("button");
+        // used to change the color of the button, if there is an active milestone
+        milestone_button.id = Issues.ID_NEW_ISSUE_MILESTONES_BUTTON;
+        milestone_button.className = "w3-button full-width " + Milestones.CLASS_BUTTON_NO_MILESTONE;
+        milestone_button.setAttribute("onclick", "Controls.toggleMilestones()");
+
+        let font_awesome_button_image = document.createElement("i");
+        font_awesome_button_image.className = "fa fa-map-signs fa-1x";
+        font_awesome_button_image.setAttribute("aria-hidden", "true");
+        milestone_button.appendChild(font_awesome_button_image);
+
+        return milestone_button;
+    }
+
+    static buildList(): HTMLElement {
+        // this just sets up the list for the milestones, it does not actually create them
+        let milestones_list = document.createElement("div");
+        milestones_list.id = Issues.ID_NEW_ISSUE_MILESTONES_LIST;
+        milestones_list.className = "w3-dropdown-content w3-bar-block w3-border";
+        return milestones_list;
     }
 }

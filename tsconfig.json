@@ -6,6 +6,7 @@
         "target": "es6",
         "module": "es6",
         "sourceMap": true,
-        "outDir": "./js/build/"
+        "outDir": "./js/build/",
+        "alwaysStrict": true
     }
 }

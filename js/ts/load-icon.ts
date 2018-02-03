@@ -1,8 +1,11 @@
 export default class LoadIcon {
+    static ID_LOAD_ICON = "loading-icon";
+
     static show() {
-        document.getElementById("loading-icon").hidden = false;
+        document.getElementById(LoadIcon.ID_LOAD_ICON).hidden = false;
     }
+
     static hide() {
-        document.getElementById("loading-icon").hidden = true;
+        document.getElementById(LoadIcon.ID_LOAD_ICON).hidden = true;
     }
 }
