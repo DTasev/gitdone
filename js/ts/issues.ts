@@ -124,14 +124,37 @@ export default class Issues {
         const row = document.createElement("div");
         row.className = "w3-row w3-dark-grey issue-margin-bottom";
 
+        const link_class_names = "issue-link w3-text-sand w3-padding w3-block w3-ripple w3-hover-green";
         // div for the first element of the row - the issue title and link
         const issue_col = document.createElement("div");
         const issue_link = Issues.buildLinkOpenInNewTab(issue["html_url"], issue["title"] + " #" + issue["number"]);
-        issue_link.className = "issue-link w3-text-sand w3-padding w3-block w3-ripple w3-hover-green";
+        issue_link.className = link_class_names;
         issue_link.title = issue["body"];
         issue_col.appendChild(issue_link);
 
-        row.appendChild(issue_col);
+        if (issue["assignees"].length !== 0) {
+            issue_col.className = "w3-col s9 m9 l10";
+            row.appendChild(issue_col);
+
+            const assignee_col = document.createElement("div");
+            assignee_col.className = "w3-col s3 m3 l2";
+            const assignee_link = document.createElement("a");
+            assignee_link.href = issue["assignees"][0]["html_url"];
+            assignee_link.className = link_class_names + " w3-button";
+            assignee_link.appendChild(document.createTextNode(issue["assignees"][0]["login"]));
+            assignee_col.appendChild(assignee_link);
+
+            if (issue["assignees"].length > 1) {
+                assignee_link.text += "...";
+                // combine the usernames of the rest of the assignees into a single string
+                // the start value is the set to be the first additional assignee, then the rest will be appended
+                assignee_link.title = issue["assignees"].slice(2).reduce((previous: string, current) => previous + ", " + current["login"], issue["assignees"][1]["login"]);
+            }
+
+            row.appendChild(assignee_col);
+        } else {
+            row.appendChild(issue_col);
+        }
         return row.outerHTML;
     }
 

@@ -11,8 +11,7 @@ const ISSUE_1_BODY = "I eat apples";
 const ISSUE_2_BODY = "Oranges are orange";
 
 function mockGithubGet(url, callback) {
-    // NOTE: "user" has been omitted from the data, to shorten the lines, because
-    // it is not currently used
+    // NOTE: some data has be omitted to shorten the lines, as it is not currently used
     let some_real_issue_data = [{
         "url": "https://api.github.com/repos/DTasev/gitdone/issues/67",
         "repository_url": "https://api.github.com/repos/DTasev/gitdone",
@@ -27,14 +26,17 @@ function mockGithubGet(url, callback) {
         "state": "open",
         "locked": false,
         "assignee": null,
-        "assignees": [],
         "milestone": null,
         "comments": 0,
         "created_at": "2018-02-01T16:18:06Z",
         "updated_at": "2018-02-01T16:18:06Z",
         "closed_at": null,
         "author_association": "OWNER",
-        "body": ISSUE_1_BODY
+        "body": ISSUE_1_BODY,
+        "assignees": [{
+            "login": "DTasev",
+            "html_url": "https://github.com/DTasev"
+        }]
     },
     {
         "url": "https://api.github.com/repos/DTasev/gitdone/issues/59",
@@ -50,14 +52,18 @@ function mockGithubGet(url, callback) {
         "state": "open",
         "locked": false,
         "assignee": null,
-        "assignees": [],
         "milestone": null,
         "comments": 0,
         "created_at": "2018-02-01T14:55:14Z",
         "updated_at": "2018-02-01T14:55:14Z",
         "closed_at": null,
         "author_association": "OWNER",
-        "body": ISSUE_2_BODY
+        "body": ISSUE_2_BODY,
+        "assignees": [{
+            "login": "DTasev",
+            "html_url": "https://github.com/DTasev"
+        }, { "login": "Duck", "html_url": "https://duckduckgo.com" }, { "login": "Duck", "html_url": "https://duckduckgo.com" }
+        ]
     }];
     callback(some_real_issue_data);
 }
@@ -146,7 +152,7 @@ describe('Issues', () => {
     it('should show issue detials as tooltip', () => {
         Issues.retrieve();
 
-        // children[1] retrieves the the div from the whole list, children[0] then gets
+        // children[1] retrieves the row div from the whole list, children[0] then gets
         // the contents of the div itself, which is an anchor tag
         const issue_field_1: HTMLDivElement = <HTMLDivElement>list.children[1].children[0];
         // check that the anchor tag (children[0]) contains the proper title
@@ -154,5 +160,27 @@ describe('Issues', () => {
 
         const issue_field_2: HTMLDivElement = <HTMLDivElement>list.children[2].children[0];
         expect((<HTMLAnchorElement>issue_field_2.children[0]).title).to.equal(ISSUE_2_BODY);
+    });
+    it('should have a link to the assignee', () => {
+        Issues.retrieve();
+
+        const expected_username_1 = "DTasev";
+        const expected_username_2 = "Duck";
+        const expected_html_url_1 = "https://github.com/DTasev";
+        const expected_html_url_2 = "https://duckduckgo.com";
+        // children[1] retrieves the row div from the whole list, the second children[1] gets
+        // the div tag that wraps the assignee link
+        const assignee_field_1: HTMLDivElement = <HTMLDivElement>list.children[1].children[1];
+        // check that the anchor tag (children[0]) contains the proper title
+        expect((<HTMLAnchorElement>assignee_field_1.children[0]).text).to.equal(expected_username_1);
+        expect((<HTMLAnchorElement>assignee_field_1.children[0]).href).to.equal(expected_html_url_1);
+        expect((<HTMLAnchorElement>assignee_field_1.children[0]).title).to.be.empty;
+
+        // second issue has more than one member
+        const assignee_field_2: HTMLDivElement = <HTMLDivElement>list.children[2].children[1];
+        expect((<HTMLAnchorElement>assignee_field_2.children[0]).text).to.equal(expected_username_1 + "...");
+        expect((<HTMLAnchorElement>assignee_field_2.children[0]).href).to.equal(expected_html_url_1);
+        // the second one is repeated twice
+        expect((<HTMLAnchorElement>assignee_field_2.children[0]).title).to.equal(expected_username_2 + ", " + expected_username_2);
     })
 });
