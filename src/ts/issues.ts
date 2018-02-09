@@ -29,16 +29,17 @@ export default class Issues {
         // add Enter key triggers for creating an new issue
         const jquery_id_issue_title = "#" + Issues.ID_NEW_ISSUE_TITLE;
         const jquery_id_issue_details = "#" + Issues.ID_NEW_ISSUE_DETAILS;
+
         $(jquery_id_issue_title).bind("enterKey", Issues.createNewIssue);
-        $(jquery_id_issue_title).keyup(function (e) {
-            if (e.keyCode == 13) {
+        $(jquery_id_issue_title).keyup(function (e: KeyboardEvent) {
+            if (e.keyCode == 13 && !(e.shiftKey || e.ctrlKey)) {
                 $(this).trigger("enterKey");
             }
         });
 
         $(jquery_id_issue_details).bind("enterKey", Issues.createNewIssue);
-        $(jquery_id_issue_details).keyup(function (e) {
-            if (e.keyCode == 13) {
+        $(jquery_id_issue_details).keyup(function (e: KeyboardEvent) {
+            if (e.keyCode == 13 && !(e.shiftKey || e.ctrlKey)) {
                 $(this).trigger("enterKey");
             }
         });
@@ -92,7 +93,7 @@ export default class Issues {
         title_input.placeholder = "New issue title";
         title_input.autofocus = true;
 
-        const details_input = document.createElement("input");
+        const details_input = document.createElement("textarea");
         details_input.className = "w3-input w3-border";
         details_input.id = Issues.ID_NEW_ISSUE_DETAILS;
         details_input.placeholder = "Details (Optional)";
