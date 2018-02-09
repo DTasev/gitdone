@@ -1,12 +1,12 @@
 {
     "include": [
-        "./js/ts/*"
+        "./src/ts/*"
     ],
     "compilerOptions": {
         "target": "es6",
         "module": "es6",
         "sourceMap": true,
-        "outDir": "./js/build/",
+        "outDir": "./src/build/",
         "alwaysStrict": true
     }
 }

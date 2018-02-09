@@ -2,7 +2,7 @@
     "name": "quickhub",
     "version": "1.0.0",
     "description": "Quickly manage multiple git repositories",
-    "main": "js/dist/bundle.js",
+    "main": "src/dist/bundle.js",
     "dependencies": {},
     "devDependencies": {
         "@types/chai": "^4.1.2",
@@ -19,9 +19,10 @@
         "webpack-merge": "^4.1.1"
     },
     "scripts": {
-        "test": "set TS_NODE_COMPILER_OPTIONS={\"module\":\"commonjs\"} && mocha --compilerOptions --require ts-node/register --require jsdom-global/register js/test/*.test.ts",
-        "build": "webpack --config webpack.prod.js && git ls-files -s js/dist/bundle.js > js/dist/prod_build",
-        "watch": "webpack --config webpack.dev.js --watch"
+        "test": "set TS_NODE_COMPILER_OPTIONS={\"module\":\"commonjs\"} && mocha --compilerOptions --require ts-node/register --require jsdom-global/register src/test/*.test.ts",
+        "build-prod": "webpack --config webpack.prod.js && git ls-files -s src/dist/bundle.js > src/dist/prod_build",
+        "watch": "webpack --config webpack.dev.js --watch",
+        "build-dev": "webpack --config webpack.dev.js"
     },
     "repository": {
         "type": "git",

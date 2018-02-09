@@ -12,12 +12,17 @@
         },
         {
             "type": "npm",
-            "script": "build",
+            "script": "build-dev",
             "problemMatcher": []
         },
         {
             "type": "npm",
             "script": "watch",
+            "problemMatcher": []
+        },
+        {
+            "type": "npm",
+            "script": "build-prod",
             "problemMatcher": []
         }
     ]
