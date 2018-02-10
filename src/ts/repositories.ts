@@ -5,6 +5,8 @@ import Pinned from './pin-manager';
 import CredentialForm from './credential-form';
 import Issues from './issues';
 import Milestones from './milestones';
+import { P } from "./parser";
+import Controls from "./site-controls";
 
 export default class Repositories {
     static ID_REPO_PREFIX = "repo_";
@@ -52,34 +54,48 @@ export default class Repositories {
     }
 
     private static buildRow(id, repository) {
-        const link = Repositories.buildLink("#" + repository["full_name"], repository["name"]);
-        link.className = "repo-link w3-button w3-padding w3-text-teal w3-col s8 m8 l8";
-        link.setAttribute('onclick', "Controls.w3_close()");
-
-        const ext_link = document.createElement("a");
-        const ext_font_awesome = document.createElement("i");
-        ext_font_awesome.className = 'fas fa-external-link-alt';
-        ext_font_awesome.setAttribute("aria-hidden", "true");
-        ext_link.href = repository["html_url"];
-        ext_link.target = "_blank";
-        ext_link.appendChild(ext_font_awesome);
-        ext_link.className = "w3-button w3-padding w3-hover-opacity w3-col s2 m2 l2";
-
-        const pin_span = document.createElement("span");
-        const pin_img = document.createElement("i");
-        pin_img.className = 'fas fa-thumbtack';
-        pin_img.setAttribute("aria-hidden", "true");
-        pin_span.appendChild(pin_img);
-        pin_span.setAttribute('onclick', 'Pinned.toggle(' + id + ');');
-        pin_span.className = "w3-button w3-padding w3-hover-opacity w3-col s2 m2 l2";
-
-        const div = document.createElement("div");
-        div.className = "w3-row";
-        div.id = Repositories.ID_REPO_PREFIX + id;
-        div.appendChild(link);
-        div.appendChild(pin_span);
-        div.appendChild(ext_link);
-
+        const button_classes: string = "w3-button w3-padding w3-hover-opacity w3-col s2 m2 l2";
+        const div: HTMLDivElement = <HTMLDivElement>P.json2html({
+            // element for the row
+            "div": {
+                "className": "w3-row",
+                "id": Repositories.ID_REPO_PREFIX + id,
+                "children": [{
+                    // the link that can be clicked to load the repository's issues
+                    "a": {
+                        "href": encodeURI("#" + repository["full_name"]),
+                        "text": repository["name"],
+                        "className": "repo-link w3-button w3-padding w3-text-teal w3-col s8 m8 l8",
+                        "onclick": "Controls.w3_close()"
+                    }
+                }, {
+                    // pin button
+                    "button": {
+                        "onclick": "Pinned.toggle(" + id + ")",
+                        "className": button_classes,
+                        "children": [{
+                            "i": {
+                                "className": 'fas fa-thumbtack',
+                                "aria-hidden": true
+                            }
+                        }]
+                    }
+                }, {
+                    // the link that opens the page in github    
+                    "a": {
+                        "href": repository["html_url"],
+                        "target": "_blank",
+                        "className": button_classes,
+                        "children": [{
+                            "i": {
+                                "className": "fas fa-external-link-alt",
+                                "aria-hidden": true
+                            }
+                        }]
+                    }
+                }]
+            }
+        });
         return div;
     }
 

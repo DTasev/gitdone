@@ -3,6 +3,7 @@ import * as $ from "../lib/jquery-3.2.1";
 import Github from './github';
 import Milestones from './milestones';
 import Repositories from './repositories';
+import { P } from "./parser";
 
 export default class Issues {
     static readonly ID_ISSUE_LIST = "issues-list";
@@ -83,27 +84,34 @@ export default class Issues {
      * Build the HTML for the new issue input form.
      */
     private static buildInput(): HTMLElement {
-        const outer_div = document.createElement("div");
-        outer_div.className = "w3-row w3-dark-grey w3-padding issue-margin-bottom";
+        const outer_div_desc = {
+            "div": {
+                "className": "w3-row w3-dark-grey w3-padding issue-margin-bottom",
+                "children": [{
+                    "input": {
+                        "className": "w3-input w3-border",
+                        "id": Issues.ID_NEW_ISSUE_TITLE,
+                        "type": "text",
+                        "placeholder": "New issue title",
+                        "autofocus": true
+                    }
+                }, {
+                    "textarea": {
+                        "className": "w3-input w3-border",
+                        "id": Issues.ID_NEW_ISSUE_DETAILS,
+                        "placeholder": "Details (Optional)"
+                    }
+                }]
+            }
+        };
 
-        const title_input = document.createElement("input");
-        title_input.className = "w3-input w3-border";
-        title_input.id = Issues.ID_NEW_ISSUE_TITLE;
-        title_input.type = "text";
-        title_input.placeholder = "New issue title";
-        title_input.autofocus = true;
+        const outer_div: HTMLElement = P.json2html(outer_div_desc);
 
-        const details_input = document.createElement("textarea");
-        details_input.className = "w3-input w3-border";
-        details_input.id = Issues.ID_NEW_ISSUE_DETAILS;
-        details_input.placeholder = "Details (Optional)";
-
-        outer_div.appendChild(title_input);
-        outer_div.appendChild(details_input);
-
-        // options for the issues
-        const new_issue_options = document.createElement("div");
-        new_issue_options.className = "w3-dropdown-click margin-top-1em";
+        const new_issue_options = P.json2html({
+            "div": {
+                "className": "w3-dropdown-click margin-top-1em"
+            }
+        });
 
         const milestone_button = Milestones.buildButton();
         const milestones_list = Milestones.buildList();
@@ -122,54 +130,60 @@ export default class Issues {
      */
     private static buildRow(issue) {
         // div for the whole row
-        const row = document.createElement("div");
-        row.className = "w3-row w3-dark-grey issue-margin-bottom";
+        const row = P.json2html({
+            "div": {
+                "className": "w3-row w3-dark-grey issue-margin-bottom"
+            }
+        });
 
         const link_class_names = "issue-link w3-text-sand w3-padding w3-block w3-ripple w3-hover-green";
-        // div for the first element of the row - the issue title and link
-        const issue_col = document.createElement("div");
-        const issue_link = Issues.buildLinkOpenInNewTab(issue["html_url"], issue["title"] + " #" + issue["number"]);
-        issue_link.className = link_class_names;
-        issue_link.title = issue["body"];
-        issue_col.appendChild(issue_link);
+
+        const issue_col = P.json2html({
+            "div": {
+                "children": [{
+                    "a": {
+                        "href": encodeURI(issue["html_url"]),
+                        "target": "_blank",
+                        "text": issue["title"] + " #" + issue["number"],
+                        "className": link_class_names,
+                        "title": issue["body"]
+                    }
+                }]
+            }
+        })
 
         if (issue["assignees"].length !== 0) {
             issue_col.className = "w3-col s9 m9 l10";
+            // add the issue name column first, the following ones will appear on its left
             row.appendChild(issue_col);
-
-            const assignee_col = document.createElement("div");
-            assignee_col.className = "w3-col s3 m3 l2";
-            const assignee_link = document.createElement("a");
-            assignee_link.href = issue["assignees"][0]["html_url"];
-            assignee_link.className = link_class_names + " w3-button";
-            assignee_link.appendChild(document.createTextNode(issue["assignees"][0]["login"]));
-            assignee_col.appendChild(assignee_link);
-
+            let assignee_link_text = issue["assignees"][0]["login"];
+            let assignee_link_title = "";
             if (issue["assignees"].length > 1) {
-                assignee_link.text += "...";
+                assignee_link_text += "...";
                 // combine the usernames of the rest of the assignees into a single string
                 // the start value is the set to be the first additional assignee, then the rest will be appended
-                assignee_link.title = issue["assignees"].slice(2).reduce((previous: string, current) => previous + ", " + current["login"], issue["assignees"][1]["login"]);
+                assignee_link_title = issue["assignees"].slice(2).reduce((previous: string, current) => previous + ", " + current["login"], issue["assignees"][1]["login"]);
             }
 
-            row.appendChild(assignee_col);
+            // const assignee_col = document.createElement("div");
+            const assignee_col = {
+                "div": {
+                    "className": "w3-col s3 m3 l2",
+                    "children": [{
+                        "a": {
+                            "href": issue["assignees"][0]["html_url"],
+                            "className": link_class_names + " w3_button",
+                            "text": assignee_link_text,
+                            "title": assignee_link_title
+                        }
+                    }]
+                }
+            };
+
+            row.appendChild(P.json2html(assignee_col));
         } else {
             row.appendChild(issue_col);
         }
         return row.outerHTML;
-    }
-
-    /**
-     * Builds the HTML for a link that opens in a new tab.
-     * @param address The address that the link will point to
-     * @param name Name/label for the tag that will be displayed in HTML
-     */
-    private static buildLinkOpenInNewTab(address, name) {
-        const elem_a = document.createElement('a');
-        elem_a.href = encodeURI(address);
-        elem_a.target = "_blank";
-        // parse the external data safely as text, this protects from XSS
-        elem_a.appendChild(document.createTextNode(name));
-        return elem_a;
     }
 }
