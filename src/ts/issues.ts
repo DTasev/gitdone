@@ -4,6 +4,7 @@ import Github from './github';
 import Milestones from './milestones';
 import Repositories from './repositories';
 import { P } from "./parser";
+import { Filter } from "./filter-options";
 
 export default class Issues {
     static readonly ID_ISSUE_LIST = "issues-list";
@@ -14,11 +15,11 @@ export default class Issues {
 
     static retrieve() {
         if (window.location.hash.length > 1) {
-            const repositoryUrl = Issues.makeIssuesUrl(window.location.hash);
+            const repository_url = Issues.makeIssuesUrl(window.location.hash) + Filter.option();
             // substring removes the hash from the string, as window.location.hash gives bach #Username/reponame
             // this fully replaces the HTML in the element, as it's usually empty or has another repository's name
             document.getElementById(Repositories.ID_DISPLAY_REPOSITORY_NAME).innerHTML = " - " + window.location.hash.substring(1);
-            Github.GET(repositoryUrl, Issues.show);
+            Github.GET(repository_url, Issues.show);
         }
     }
 
