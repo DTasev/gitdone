@@ -9,6 +9,8 @@ import Pinned from './pin-manager';
 window["Pinned"] = Pinned;
 import Controls from './site-controls';
 window["Controls"] = Controls;
+import { Filter } from "./filter-options";
+(window as any).Filter = Filter;
 
 $(document).on('keyup', "#repo-filter input", $.proxy(Repositories.filterRepositories, this));
 
