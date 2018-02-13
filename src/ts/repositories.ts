@@ -108,7 +108,8 @@ export default class Repositories {
 
         if (filter_string.length > 0) {
             $(repo_row_tag).each(function (i, v) {
-                if (v.children[0].text.indexOf(filter_string) == -1) {
+                let repo_name: HTMLAnchorElement = v.children[0];
+                if (repo_name.text.toLowerCase().indexOf(filter_string) == -1) {
                     $(this).hide();
                 } else {
                     $(this).show();
