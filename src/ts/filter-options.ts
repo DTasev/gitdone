@@ -5,8 +5,8 @@ import Issues from "./issues";
 
 export class Filter {
     static ID_FILTER_OPTIONS = "filter-options";
-    static ASSIGNEE = "?assignee"
-    static CREATOR = "?creator"
+    static ASSIGNEE = "assignee"
+    static CREATOR = "creator"
     private static CLASS_ACTIVE = "w3-black";
     private static CLASS_INACTIVE = "w3-white";
     private static value = "";
