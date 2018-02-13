@@ -168,7 +168,7 @@ export default class Issues {
             // const assignee_col = document.createElement("div");
             const assignee_col = {
                 "div": {
-                    "className": "w3-col s3 m3 l2",
+                    "className": "w3-col s3 m3 l2 w3-center",
                     "children": [{
                         "a": {
                             "href": issue["assignees"][0]["html_url"],
