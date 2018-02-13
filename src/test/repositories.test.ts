@@ -8,6 +8,7 @@ import Pinned from "../ts/pin-manager";
 import Milestones from "../ts/milestones";
 import Repositories from "../ts/repositories";
 import CredentialForm from '../ts/credential-form';
+import { Filter } from '../ts/filter-options';
 
 function mockData() {
     // very trimmed repository data, only the relevant fields are left
@@ -35,9 +36,17 @@ function mockRepositoryList(): HTMLElement {
     return list;
 }
 
+function mockFilters(): HTMLElement {
+    const div = document.createElement("div");
+    div.id = Filter.ID_FILTER_OPTIONS;
+    document.body.appendChild(div);
+    return div;
+}
+
 function Potatoes() { }
 describe('Repositories', () => {
     beforeEach(() => {
+        mockFilters();
         Github.GET = mockGithubGet;
 
         this.list = mockRepositoryList();
