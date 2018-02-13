@@ -7,6 +7,7 @@ import Issues from './issues';
 import Milestones from './milestones';
 import { P } from "./parser";
 import Controls from "./site-controls";
+import { Filter } from "./filter-options";
 
 export default class Repositories {
     static ID_REPO_PREFIX = "repo_";
@@ -35,6 +36,8 @@ export default class Repositories {
         Issues.retrieve();
         // hide the credential form, only after a successful authentication
         CredentialForm.hide();
+        // create the buttons for the filter options
+        Filter.create();
     }
 
     private static makeRows(json_data) {
