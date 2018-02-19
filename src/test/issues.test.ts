@@ -2,10 +2,10 @@ import { expect, assert } from 'chai';
 import 'mocha';
 
 import Mock from './mock';
-import Issues from "../ts/issues";
+import Issues from "../ts/section/issues";
 import Github from "../ts/github";
-import Milestones from "../ts/milestones";
-import Repositories from "../ts/repositories";
+import Milestones from "../ts/section/milestones";
+import Repositories from "../ts/section/repositories";
 
 const ISSUE_1_BODY = "I eat apples";
 const ISSUE_2_BODY = "Oranges are orange";

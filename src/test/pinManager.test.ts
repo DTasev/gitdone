@@ -1,8 +1,8 @@
 import { expect } from 'chai';
 import 'mocha';
 
-import Pinned from "../ts/pinManager";
-import Repositories from "../ts/repositories";
+import Pinned from "../ts/section/pinManager";
+import Repositories from "../ts/section/repositories";
 import Mock from './mock';
 import LocalStorageMock from "./localStorageMock";
 
