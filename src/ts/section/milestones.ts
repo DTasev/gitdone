@@ -1,6 +1,6 @@
-import Github from './github';
+import Github from '../github';
 import Issues from './issues';
-import Controls from './site-controls';
+import Controls from '../siteControls';
 
 export default class Milestones {
     // the ID of the chosen milestone

@@ -1,8 +1,10 @@
-import $ from "../lib/jquery-3.2.1";
-import LoadIcon from './load-icon';
+import * as $ from "../lib/jquery-3.2.1";
+import { LoadIcon } from './item/loadIcon';
 
 type ResponseCallbackFunction = (x: any) => void;
+
 export default class Github {
+    // per_page=100 gives back 100 repositories, currently if a user has > 100 they won't be shown
     public static REPOSITORIES_URL = "https://api.github.com/user/repos?per_page=100";
     private static formatError(request): string {
         let error_message = "";
@@ -46,7 +48,7 @@ export default class Github {
         const auth_basic = window.btoa($("#username input").val() + ":" + $("#api-key input").val());
         request.open("GET", url, true);
         request.setRequestHeader("Authorization", "Basic " + auth_basic);
-        request.onreadystatechange = function () {
+        request.onreadystatechange = function() {
             // expecting 200 OK
             Github.handleResponse(request, 200, callback);
         };
@@ -60,7 +62,7 @@ export default class Github {
         let auth_basic = window.btoa($("#username input").val() + ":" + $("#api-key input").val());
         request.open("POST", url, true);
         request.setRequestHeader("Authorization", "Basic " + auth_basic);
-        request.onreadystatechange = function () {
+        request.onreadystatechange = function() {
             // expecting 201 Created
             Github.handleResponse(request, 201, callback);
         };

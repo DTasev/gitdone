@@ -4,11 +4,11 @@ import 'mocha';
 import Mock from './mock';
 import Issues from "../ts/issues";
 import Github from "../ts/github";
-import Pinned from "../ts/pin-manager";
+import Pinned from "../ts/pinManager";
 import Milestones from "../ts/milestones";
 import Repositories from "../ts/repositories";
-import CredentialForm from '../ts/credential-form';
-import { Filter } from '../ts/filter-options';
+import CredentialForm from '../ts/credentialForm';
+import { Filter } from '../ts/filter';
 
 function mockData() {
     // very trimmed repository data, only the relevant fields are left

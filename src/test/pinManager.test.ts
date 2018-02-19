@@ -1,10 +1,10 @@
 import { expect } from 'chai';
 import 'mocha';
 
-import Pinned from "../ts/pin-manager";
+import Pinned from "../ts/pinManager";
 import Repositories from "../ts/repositories";
 import Mock from './mock';
-import LocalStorageMock from "./local-storage-mock";
+import LocalStorageMock from "./localStorageMock";
 
 const REPOSITORY_COUNT = 5;
 const REPOSITORY_NAMES = [

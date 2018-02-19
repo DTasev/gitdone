@@ -1,10 +1,10 @@
 // * as $ allows ts-node to compile to commonjs and run the tests for this module
-import * as $ from "../lib/jquery-3.2.1";
-import Github from './github';
+import * as $ from "../../lib/jquery-3.2.1";
+import Github from '../github';
 import Milestones from './milestones';
 import Repositories from './repositories';
-import { P } from "./parser";
-import { Filter } from "./filter-options";
+import { J2H } from "../json2html";
+import Filter from "./filter";
 
 export default class Issues {
     static readonly ID_ISSUE_LIST = "issues-list";
@@ -106,9 +106,9 @@ export default class Issues {
             }
         };
 
-        const outer_div: HTMLElement = P.json2html(outer_div_desc);
+        const outer_div = J2H.parse<HTMLElement>(outer_div_desc);
 
-        const new_issue_options = P.json2html({
+        const new_issue_options = J2H.parse({
             "div": {
                 "className": "w3-dropdown-click margin-top-1em"
             }
@@ -131,7 +131,7 @@ export default class Issues {
      */
     private static buildRow(issue) {
         // div for the whole row
-        const row = P.json2html({
+        const row = J2H.parse({
             "div": {
                 "className": "w3-row w3-dark-grey issue-margin-bottom"
             }
@@ -139,7 +139,7 @@ export default class Issues {
 
         const link_class_names = "issue-link w3-text-sand w3-padding w3-block w3-ripple w3-hover-green";
 
-        const issue_col = P.json2html({
+        const issue_col = J2H.parse({
             "div": {
                 "children": [{
                     "a": {
@@ -153,6 +153,7 @@ export default class Issues {
             }
         })
 
+        // if there is someone assigned to the issue, then add their name
         if (issue["assignees"].length !== 0) {
             issue_col.className = "w3-col s9 m9 l10";
             // add the issue name column first, the following ones will appear on its left
@@ -166,7 +167,6 @@ export default class Issues {
                 assignee_link_title = issue["assignees"].slice(2).reduce((previous: string, current) => previous + ", " + current["login"], issue["assignees"][1]["login"]);
             }
 
-            // const assignee_col = document.createElement("div");
             const assignee_col = {
                 "div": {
                     "className": "w3-col s3 m3 l2 w3-center",
@@ -181,7 +181,7 @@ export default class Issues {
                 }
             };
 
-            row.appendChild(P.json2html(assignee_col));
+            row.appendChild(J2H.parse(assignee_col));
         } else {
             row.appendChild(issue_col);
         }

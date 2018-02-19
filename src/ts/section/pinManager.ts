@@ -1,4 +1,4 @@
-import * as $ from "../lib/jquery-3.2.1";
+import * as $ from "../../lib/jquery-3.2.1";
 import Repositories from './repositories';
 
 export default class Pinned {

@@ -1,13 +1,15 @@
 // * as $ allows ts-node to compile to commonjs and run the tests for this module
-import * as $ from "../lib/jquery-3.2.1";
-import Github from './github';
-import Pinned from './pin-manager';
-import CredentialForm from './credential-form';
+import * as $ from "../../lib/jquery-3.2.1";
+import { J2H } from "../json2html";
+
+import Github from '../github';
+import Pinned from './pinManager';
 import Issues from './issues';
 import Milestones from './milestones';
-import { P } from "./parser";
-import Controls from "./site-controls";
-import { Filter } from "./filter-options";
+import Controls from "../siteControls";
+import Filter from "./filter";
+
+import { CredentialForm } from '../item/credentialForm';
 
 export default class Repositories {
     static ID_REPO_PREFIX = "repo_";
@@ -58,7 +60,7 @@ export default class Repositories {
 
     private static buildRow(id, repository) {
         const button_classes: string = "w3-button w3-padding w3-hover-opacity w3-col s2 m2 l2";
-        const div: HTMLDivElement = <HTMLDivElement>P.json2html({
+        const div: HTMLDivElement = J2H.parse<HTMLDivElement>({
             // element for the row
             "div": {
                 "className": "w3-row",

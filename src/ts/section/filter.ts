@@ -1,10 +1,10 @@
-import * as $ from '../lib/jquery-3.2.1';
+import * as $ from '../../lib/jquery-3.2.1';
+import { J2H } from "../json2html";
 
-import { P } from "./parser";
 import Issues from "./issues";
 
-export class Filter {
-    static ID_FILTER_OPTIONS = "filter-options";
+export default class Filter {
+    static ID = "filter-options";
     static ASSIGNEE = "assignee"
     static CREATOR = "creator"
     private static CLASS_ACTIVE = "w3-black";
@@ -12,34 +12,45 @@ export class Filter {
     private static value = "";
 
     static create() {
-        const filter_options = document.getElementById(Filter.ID_FILTER_OPTIONS);
-        const all: HTMLButtonElement = <HTMLButtonElement>P.json2html({
+        const options = document.getElementById(Filter.ID);
+
+        // clear all HTML from previous filter create calls
+        options.innerHTML = "";
+
+        const text = J2H.parse<HTMLSpanElement>({
+            "span": {
+                "className": "w3-margin-right",
+                "textContent": "Filter:"
+            }
+        });
+        options.appendChild(text);
+        const all: HTMLButtonElement = J2H.parse<HTMLButtonElement>({
             "button": {
                 "className": "w3-button " + Filter.CLASS_ACTIVE,
                 "textContent": "ALL",
                 "onclick": "Filter.set(this, '');"
             }
         });
-        filter_options.appendChild(all);
-        const assigned: HTMLButtonElement = <HTMLButtonElement>P.json2html({
+        options.appendChild(all);
+        const assigned: HTMLButtonElement = J2H.parse<HTMLButtonElement>({
             "button": {
                 "className": "w3-button " + Filter.CLASS_INACTIVE,
                 "textContent": "ASSIGNED",
                 "onclick": "Filter.set(this, Filter.ASSIGNEE);"
             }
         });
-        filter_options.appendChild(assigned);
-        const creator: HTMLButtonElement = <HTMLButtonElement>P.json2html({
+        options.appendChild(assigned);
+        const creator: HTMLButtonElement = J2H.parse<HTMLButtonElement>({
             "button": {
                 "className": "w3-button " + Filter.CLASS_INACTIVE,
                 "textContent": "CREATED",
                 "onclick": "Filter.set(this, Filter.CREATOR);"
             }
         });
-        filter_options.appendChild(creator);
+        options.appendChild(creator);
     }
     static set(caller: HTMLElement, value: string) {
-        const filter_options: HTMLElement = document.getElementById(Filter.ID_FILTER_OPTIONS);
+        const filter_options: HTMLElement = document.getElementById(Filter.ID);
         // remove the active class from every button
         for (const option of filter_options.children) {
             option.className = option.className.replace(Filter.CLASS_ACTIVE, Filter.CLASS_INACTIVE);
