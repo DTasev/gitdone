@@ -1,4 +1,4 @@
-import * as $ from "../lib/jquery-3.2.1";
+import * as $ from "jquery";
 import { LoadIcon } from './item/loadIcon';
 
 type ResponseCallbackFunction = (x: any) => void;
@@ -48,7 +48,7 @@ export default class Github {
         const auth_basic = window.btoa($("#username input").val() + ":" + $("#api-key input").val());
         request.open("GET", url, true);
         request.setRequestHeader("Authorization", "Basic " + auth_basic);
-        request.onreadystatechange = function() {
+        request.onreadystatechange = function () {
             // expecting 200 OK
             Github.handleResponse(request, 200, callback);
         };
@@ -62,7 +62,7 @@ export default class Github {
         let auth_basic = window.btoa($("#username input").val() + ":" + $("#api-key input").val());
         request.open("POST", url, true);
         request.setRequestHeader("Authorization", "Basic " + auth_basic);
-        request.onreadystatechange = function() {
+        request.onreadystatechange = function () {
             // expecting 201 Created
             Github.handleResponse(request, 201, callback);
         };

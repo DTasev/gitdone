@@ -1,5 +1,5 @@
 // * as $ allows ts-node to compile to commonjs and run the tests for this module
-import * as $ from "../../lib/jquery-3.2.1";
+import * as $ from "jquery";
 import { J2H } from "../json2html";
 
 import Github from '../github';
@@ -105,12 +105,12 @@ export default class Repositories {
     }
 
     static filterRepositories(e) {
-        const filter_string = $("#" + Repositories.ID_REPO_FILTER + " input").val().toLowerCase();
+        const filter_string = ($("#" + Repositories.ID_REPO_FILTER + " input").val() + "").toLowerCase();
         const repo_row_tag = "#" + Repositories.ID_REPOSITORY_LIST + " .w3-row";
 
         if (filter_string.length > 0) {
             $(repo_row_tag).each(function (i, v) {
-                let repo_name: HTMLAnchorElement = v.children[0];
+                let repo_name = <HTMLAnchorElement>v.children[0];
                 if (repo_name.text.toLowerCase().indexOf(filter_string) == -1) {
                     $(this).hide();
                 } else {

@@ -4,10 +4,10 @@ const CleanWebpackPlugin = require('clean-webpack-plugin');
 module.exports = {
     entry: './src/build/main.js',
     plugins: [
-        new CleanWebpackPlugin(['src/dist'])
+        new CleanWebpackPlugin(['dist'])
     ],
     output: {
         filename: 'bundle.js',
-        path: path.resolve(__dirname, 'src/dist'),
+        path: path.resolve(__dirname, 'dist'),
     }
 };

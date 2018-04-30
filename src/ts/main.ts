@@ -1,4 +1,4 @@
-import * as $ from "../lib/jquery-3.2.1";
+import * as $ from "jquery";
 import Github from './github';
 import Repositories from './section/repositories';
 import Issues from './section/issues';

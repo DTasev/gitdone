@@ -1,5 +1,5 @@
 // * as $ allows ts-node to compile to commonjs and run the tests for this module
-import * as $ from "../../lib/jquery-3.2.1";
+import * as $ from "jquery";
 import Github from '../github';
 import Milestones from './milestones';
 import Repositories from './repositories';
@@ -33,14 +33,14 @@ export default class Issues {
         const jquery_id_issue_details = "#" + Issues.ID_NEW_ISSUE_DETAILS;
 
         $(jquery_id_issue_title).bind("enterKey", Issues.createNewIssue);
-        $(jquery_id_issue_title).keyup(function (e: KeyboardEvent) {
+        $(jquery_id_issue_title).keyup((e) => {
             if (e.keyCode == 13 && !(e.shiftKey || e.ctrlKey)) {
                 $(this).trigger("enterKey");
             }
         });
 
         $(jquery_id_issue_details).bind("enterKey", Issues.createNewIssue);
-        $(jquery_id_issue_details).keyup(function (e: KeyboardEvent) {
+        $(jquery_id_issue_details).keyup((e) => {
             if (e.keyCode == 13 && !(e.shiftKey || e.ctrlKey)) {
                 $(this).trigger("enterKey");
             }

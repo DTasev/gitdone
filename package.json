@@ -3,11 +3,13 @@
     "version": "1.0.0",
     "description": "Quickly manage multiple git repositories",
     "main": "src/dist/bundle.js",
-    "dependencies": {},
+    "dependencies": {
+        "jquery": "^3.3.1"
+    },
     "devDependencies": {
         "@types/chai": "^4.1.2",
+        "@types/jquery": "^3.3.1",
         "@types/mocha": "^2.2.48",
-        "@types/jquery": "^3.3.0",
         "chai": "^4.1.2",
         "clean-webpack-plugin": "^0.1.18",
         "jsdom": "^11.6.2",
@@ -21,7 +23,7 @@
     },
     "scripts": {
         "test": "set TS_NODE_COMPILER_OPTIONS={\"module\":\"commonjs\"} && mocha --compilerOptions --require ts-node/register --require jsdom-global/register src/test/*.test.ts",
-        "build:prod": "tsc && webpack --config webpack.prod.js && git ls-files -s src/dist/bundle.js > src/dist/prod_build",
+        "build:prod": "tsc && webpack --config webpack.prod.js",
         "watch": "webpack --config webpack.dev.js --watch",
         "build:dev": "tsc && webpack --config webpack.dev.js"
     },

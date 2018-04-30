@@ -1,4 +1,4 @@
-import * as $ from '../../lib/jquery-3.2.1';
+import * as $ from "jquery";
 import { J2H } from "../json2html";
 
 import Issues from "./issues";

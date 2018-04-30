@@ -1,4 +1,4 @@
-import * as $ from "../../lib/jquery-3.2.1";
+import * as $ from "jquery";
 import Repositories from './repositories';
 
 export default class Pinned {
@@ -42,7 +42,7 @@ export default class Pinned {
      */
     static toggle(id) {
         const full_id = "#" + Repositories.ID_REPO_PREFIX + id;
-        const chosen_repo = $(full_id + " a")[0].text;
+        const chosen_repo = (<HTMLAnchorElement>$(full_id + " a")[0]).text;
         const pinned_repositories = Pinned.get();
 
         // use the comma-separated string returned by get
