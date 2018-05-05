@@ -26,5 +26,5 @@ $(document).ready(function () {
 });
 
 $(window).on('hashchange', function () {
-    Issues.retrieve();
+    Issues.retrieve(true);
 });

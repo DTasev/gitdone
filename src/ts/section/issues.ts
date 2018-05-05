@@ -13,9 +13,9 @@ export default class Issues {
     static readonly ID_NEW_ISSUE_MILESTONES_BUTTON = "new-issue-milestones-button";
     static readonly ID_NEW_ISSUE_MILESTONES_LIST = "new-issue-milestones-list";
 
-    static retrieve() {
+    static retrieve(allowCache = false) {
         if (window.location.hash.length > 1) {
-            const repository_url = `${Issues.makeIssuesUrl(window.location.hash)}?${Filter.option()}+_=${new Date().getTime()}`;
+            const repository_url = `${Issues.makeIssuesUrl(window.location.hash)}` + (allowCache ? "" : `?${Filter.option()}+_=${new Date().getTime()}`);
             // substring removes the hash from the string, as window.location.hash gives bach #Username/reponame
             // this fully replaces the HTML in the element, as it's usually empty or has another repository's name
             document.getElementById(Repositories.ID_DISPLAY_REPOSITORY_NAME).innerHTML = " - " + window.location.hash.substring(1);
