@@ -29,22 +29,14 @@ export default class Issues {
         elem.innerHTML = Issues.buildInput().outerHTML + all_issues_html;
 
         // add Enter key triggers for creating an new issue
-        const jquery_id_issue_title = "#" + Issues.ID_NEW_ISSUE_TITLE;
-        const jquery_id_issue_details = "#" + Issues.ID_NEW_ISSUE_DETAILS;
-
-        $(jquery_id_issue_title).bind("enterKey", Issues.createNewIssue);
-        $(jquery_id_issue_title).keyup((e) => {
+        const keyDownFunction = (e) => {
             if (e.keyCode == 13 && !(e.shiftKey || e.ctrlKey)) {
-                $(this).trigger("enterKey");
+                Issues.createNewIssue();
             }
-        });
+        }
 
-        $(jquery_id_issue_details).bind("enterKey", Issues.createNewIssue);
-        $(jquery_id_issue_details).keyup((e) => {
-            if (e.keyCode == 13 && !(e.shiftKey || e.ctrlKey)) {
-                $(this).trigger("enterKey");
-            }
-        });
+        document.getElementById(Issues.ID_NEW_ISSUE_TITLE).onkeydown = keyDownFunction;
+        document.getElementById(Issues.ID_NEW_ISSUE_DETAILS).onkeydown = keyDownFunction;
 
         // milestones must be retrieved after the issues HTML has been built
         // otherwise it will fail to find the button where the milestones have to be placed
