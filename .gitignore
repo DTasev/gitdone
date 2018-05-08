@@ -5,5 +5,6 @@ pinned_icon.png
 node_modules/
 notes/
 src/build/
+dist/
 npm-debug.log
 logo.psd
