@@ -33,7 +33,7 @@ export default class Issues {
             if (e.keyCode == 13 && !(e.shiftKey || e.ctrlKey)) {
                 Issues.createNewIssue();
             }
-        }
+        };
 
         document.getElementById(Issues.ID_NEW_ISSUE_TITLE).onkeydown = keyDownFunction;
         document.getElementById(Issues.ID_NEW_ISSUE_DETAILS).onkeydown = keyDownFunction;
