@@ -18,12 +18,12 @@ $("#api-key").on('change', function () {
     Repositories.retrieve();
 });
 
-$(document).ready(function () {
-    // simulate a click, this allows Chrome to set the credentials' field value
-    // if we don't do this then api-key is empty on the first github GET
-    document.getElementById("api-key").click();
-    Repositories.retrieve();
-});
+document.onreadystatechange = (ev) => {
+    if (document.readyState == "complete") {
+        document.getElementById("api-key").click();
+        Repositories.retrieve();
+    }
+}
 
 $(window).on('hashchange', function () {
     Issues.retrieve(true);
