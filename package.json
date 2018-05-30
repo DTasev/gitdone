@@ -27,7 +27,7 @@
         "build:dev": "tsc && webpack --config webpack.dev.js",
         "ts:watch": "tsc --watch",
         "webpack:watch:dev": "webpack --config webpack.dev.js --watch",
-        "watch:all": "parallelshell \"npm run ts:watch\" \"npm run webpack:watch:dev\" \"npm run test\""
+        "watch:all": "parallelshell \"npm run ts:watch\" \"npm run webpack:watch:dev\""
     },
     "repository": {
         "type": "git",

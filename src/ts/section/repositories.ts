@@ -80,7 +80,7 @@ export default class Repositories {
                         "className": button_classes,
                         "children": [{
                             "i": {
-                                "className": 'fas fa-thumbtack',
+                                "className": 'fa fa-thumbtack',
                                 "aria-hidden": true
                             }
                         }]
@@ -93,7 +93,7 @@ export default class Repositories {
                         "className": button_classes,
                         "children": [{
                             "i": {
-                                "className": "fas fa-external-link-alt",
+                                "className": "fa fa-external-link-alt",
                                 "aria-hidden": true
                             }
                         }]

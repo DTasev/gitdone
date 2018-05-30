@@ -7,6 +7,7 @@ import { J2H } from "../json2html";
 import Filter from "./filter";
 
 export default class Issues {
+    static readonly ID_NEW_ISSUE_SEND_BUTTON = "issue-submit-button";
     static readonly ID_ISSUE_LIST = "issues-list";
     static readonly ID_NEW_ISSUE_TITLE = "new-issue-title";
     static readonly ID_NEW_ISSUE_DETAILS = "new-issue-body";
@@ -29,15 +30,15 @@ export default class Issues {
         elem.innerHTML = Issues.buildInput().outerHTML + all_issues_html;
 
         // add Enter key triggers for creating an new issue
-        const keyDownFunction = (e) => {
+        const createNewIssueOnEnter = (e) => {
             if (e.keyCode == 13 && !(e.shiftKey || e.ctrlKey)) {
                 Issues.createNewIssue();
             }
         };
 
-        document.getElementById(Issues.ID_NEW_ISSUE_TITLE).onkeydown = keyDownFunction;
-        document.getElementById(Issues.ID_NEW_ISSUE_DETAILS).onkeydown = keyDownFunction;
-
+        document.getElementById(Issues.ID_NEW_ISSUE_TITLE).onkeydown = createNewIssueOnEnter; 1
+        document.getElementById(Issues.ID_NEW_ISSUE_DETAILS).onkeydown = createNewIssueOnEnter;
+        document.getElementById(Issues.ID_NEW_ISSUE_SEND_BUTTON).onclick = () => { Issues.createNewIssue() };
         // milestones must be retrieved after the issues HTML has been built
         // otherwise it will fail to find the button where the milestones have to be placed
         Milestones.retrieve();
@@ -93,6 +94,12 @@ export default class Issues {
                         "className": "w3-input w3-border",
                         "id": Issues.ID_NEW_ISSUE_DETAILS,
                         "placeholder": "Details (Optional)"
+                    }
+                }, {
+                    button: {
+                        className: "w3-button w3-border w3-white w3-right w3-margin-top",
+                        textContent: "Send",
+                        id: Issues.ID_NEW_ISSUE_SEND_BUTTON
                     }
                 }]
             }
