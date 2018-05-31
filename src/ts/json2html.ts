@@ -28,7 +28,7 @@ export class J2H {
     *          "input":{
     *               "id": "username-input-id",
     *               "type": "text",
-    *               "onclick": "my-func-name()",
+    *               "onclick": "my-func-name()", //or just my-func-name, without quotation marks
     *           }
     *       },{
     *           "input":{
@@ -74,35 +74,49 @@ export class J2H {
     static parse<T = HTMLElement>(dict: {}): T {
         const [parent, props] = J2H.getParent(dict);
 
-        Object.keys(props).forEach(function (key) {
+        for (const key in props) {
             if (key === "children") {
-                for (const p of props["children"]) {
-                    parent.appendChild(J2H.parse(p));
+                const children = props["children"];
+                if (children instanceof Array) {
+                    for (const p of children) {
+                        parent.appendChild(J2H.parse(p));
+                    }
+                } else {
+                    parent.appendChild(J2H.parse(children));
                 }
             } else if (key === "onclick") {
-                parent.setAttribute("onclick", props[key]);
+                // if the function was passed as a reference, then assign directly to the onclick attribute
+                if (parent instanceof HTMLButtonElement && typeof props[key] !== "string") {
+                    parent[key] = props[key];
+                } else {
+                    // else the function was passed as a string, i.e. a static function: "MyClass.myfunc()"
+                    parent.setAttribute("onclick", props[key]);
+                }
+            } else if (key === "for" && parent instanceof HTMLLabelElement) {
+                parent.setAttribute(key, props[key]);
+            } else if (key.includes("data")) {
+                parent.setAttribute(key, props[key]);
+            } else if (key === "maxlength" && parent instanceof HTMLInputElement) {
+                parent.setAttribute(key, props[key]);
             } else {
                 parent[key] = props[key];
             }
-        });
-
+        }
         return parent;
     }
 
     /**
-     * Create a HTML element from the key in the dictionary, return the values
+     * Create an HTML element from the key in the dictionary, return the values
      * @param dict Dictionary with 1 key, and some values
      * @returns HTMLElement of the key in the dictionary, and all of its values
      */
-    private static getParent(dict: {}): [any, {}] {
-        let parent: any;
-        let props: {};
-
+    private static getParent<T = HTMLElement>(dict: {}): [T, {}] {
+        let parent, props: {};
         // get the first key in the dictionary
-        Object.keys(dict).forEach(function (key) {
+        for (const key in dict) {
             parent = document.createElement(key);
             props = dict[key];
-        });
+        }
         return [parent, props];
     }
 }

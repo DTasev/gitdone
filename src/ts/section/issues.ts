@@ -5,6 +5,7 @@ import Milestones from './milestones';
 import Repositories from './repositories';
 import { J2H } from "../json2html";
 import Filter from "./filter";
+import { IS_MOBILE } from '../util';
 
 export default class Issues {
     static readonly ID_NEW_ISSUE_SEND_BUTTON = "issue-submit-button";
@@ -14,14 +15,40 @@ export default class Issues {
     static readonly ID_NEW_ISSUE_MILESTONES_BUTTON = "new-issue-milestones-button";
     static readonly ID_NEW_ISSUE_MILESTONES_LIST = "new-issue-milestones-list";
 
+    // by default do not download the issues on mobile, just build the input and show the option to DL everything
+    static downloadOnMobile = !IS_MOBILE;
+
     static retrieve(allowCache = false) {
-        if (window.location.hash.length > 1) {
-            const repository_url = `${Issues.makeIssuesUrl(window.location.hash)}` + (allowCache ? "" : `?${Filter.option()}+_=${new Date().getTime()}`);
+        if (this.downloadOnMobile && window.location.hash.length > 1) {
+            const repository_url = `${this.makeIssuesUrl(window.location.hash)}` + (allowCache ? "" : `?${Filter.option()}+_=${new Date().getTime()}`);
             // substring removes the hash from the string, as window.location.hash gives bach #Username/reponame
             // this fully replaces the HTML in the element, as it's usually empty or has another repository's name
             document.getElementById(Repositories.ID_DISPLAY_REPOSITORY_NAME).innerHTML = " - " + window.location.hash.substring(1);
-            Github.GET(repository_url, Issues.show);
+            Github.GET(repository_url, this.show);
+        } else {
+            this.showOnlyInput();
         }
+    }
+    static showOnlyInput() {
+        const elem = document.getElementById(Issues.ID_ISSUE_LIST);
+        elem.innerHTML = Issues.buildInput().outerHTML;
+        // TODO add button load all that will override the IS_MOBILE check;
+        Issues.addIssueInputEvents();
+        const d_checkbox = {
+            div: {
+                className: "w3-row w3-dark-grey issue-margin-bottom",
+                children: [{
+                    button: {
+                        className: "w3-padding w3-button w3-white w3-border",
+                        style: "width:100%",
+                        type: "button",
+                        textContent: "Download all issues (will use data!)",
+                        onclick: function () { Issues.downloadOnMobile = !Issues.downloadOnMobile; Issues.retrieve() }
+                    }
+                }]
+            }
+        }
+        elem.appendChild(J2H.parse(d_checkbox));
     }
 
     static show(issues) {
@@ -30,18 +57,21 @@ export default class Issues {
         elem.innerHTML = Issues.buildInput().outerHTML + all_issues_html;
 
         // add Enter key triggers for creating an new issue
+        Issues.addIssueInputEvents();
+        // milestones must be retrieved after the issues HTML has been built
+        // otherwise it will fail to find the button where the milestones have to be placed
+        Milestones.retrieve();
+    }
+
+    private static addIssueInputEvents() {
         const createNewIssueOnEnter = (e) => {
             if (e.keyCode == 13 && !(e.shiftKey || e.ctrlKey)) {
                 Issues.createNewIssue();
             }
         };
-
-        document.getElementById(Issues.ID_NEW_ISSUE_TITLE).onkeydown = createNewIssueOnEnter; 1
+        document.getElementById(Issues.ID_NEW_ISSUE_TITLE).onkeydown = createNewIssueOnEnter;
         document.getElementById(Issues.ID_NEW_ISSUE_DETAILS).onkeydown = createNewIssueOnEnter;
-        document.getElementById(Issues.ID_NEW_ISSUE_SEND_BUTTON).onclick = () => { Issues.createNewIssue() };
-        // milestones must be retrieved after the issues HTML has been built
-        // otherwise it will fail to find the button where the milestones have to be placed
-        Milestones.retrieve();
+        document.getElementById(Issues.ID_NEW_ISSUE_SEND_BUTTON).onclick = () => { Issues.createNewIssue(); };
     }
 
     private static makeIssuesUrl(hash) {

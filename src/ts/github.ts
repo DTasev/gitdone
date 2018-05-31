@@ -52,6 +52,7 @@ export default class Github {
             // expecting 200 OK
             Github.handleResponse(request, 200, callback);
         };
+        request.onerror = Github.showConnectionError();
 
         LoadIcon.show();
         request.send(null);
@@ -66,7 +67,20 @@ export default class Github {
             // expecting 201 Created
             Github.handleResponse(request, 201, callback);
         };
+        request.onerror = Github.showConnectionError();
         LoadIcon.show();
+
         request.send(data);
     }
+
+    private static showConnectionError(): (this: XMLHttpRequest, ev: ErrorEvent) => any {
+        return (e) => {
+            const elem = document.getElementById("issues-error");
+            elem.innerHTML = '<div class="w3-panel w3-red w3-padding" style="width:100%"> Coudln\'t reach remote.</div>';
+            setTimeout(() => {
+                elem.style.display = "none";
+            }, 3000);
+        };
+    }
+}
 }
