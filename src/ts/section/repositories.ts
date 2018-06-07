@@ -18,6 +18,10 @@ export default class Repositories {
     static ID_DISPLAY_REPOSITORY_NAME = "display-repo-name";
     static repo_cache = null;
 
+    /**
+     * Retrieve and display the repositories
+     * @param use_cached whether to use cached data for the repositories, if such data is present
+     */
     static retrieve(use_cached: boolean = false) {
         if (use_cached && Repositories.repo_cache) {
             // Don't query github for the repositories, and use the cache
@@ -64,7 +68,6 @@ export default class Repositories {
             // element for the row
             "div": {
                 "className": "w3-row",
-                "id": Repositories.ID_REPO_PREFIX + id,
                 "children": [{
                     // the link that can be clicked to load the repository's issues
                     "a": {
@@ -76,7 +79,7 @@ export default class Repositories {
                 }, {
                     // pin button
                     "button": {
-                        "onclick": "Pinned.toggle(" + id + ")",
+                        "onclick": "Pinned.toggle(this)",
                         "className": button_classes,
                         "children": [{
                             "i": {
