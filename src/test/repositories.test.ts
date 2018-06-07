@@ -80,7 +80,6 @@ describe('Repositories', () => {
         // we have added only 2 repositories
         expect(this.list.childElementCount).to.equal(2);
         for (const [id, repo] of this.list.childNodes.entries()) {
-            expect(repo.id).to.equal(Repositories.ID_REPO_PREFIX + id);
             // there should be the repo name, pin and external link
             expect(repo.childElementCount).to.equal(3);
         }
@@ -93,7 +92,6 @@ describe('Repositories', () => {
         // should show the same thing
         expect(this.list.childElementCount).to.equal(2);
         for (const [id, repo] of this.list.childNodes.entries()) {
-            expect(repo.id).to.equal(Repositories.ID_REPO_PREFIX + id);
             // there should be the repo name, pin and external link
             expect(repo.childElementCount).to.equal(3);
         }

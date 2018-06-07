@@ -22,15 +22,20 @@ function mockRepositoryList(): HTMLDivElement {
     for (let i = 0; i < REPOSITORY_COUNT; ++i) {
         const div = document.createElement("div");
         div.id = Repositories.ID_REPO_PREFIX + i;
-        const a = document.createElement("a");
-        a.text = REPOSITORY_NAMES[i];
-        div.appendChild(a);
+        const repoName = document.createElement("a");
+        repoName.text = REPOSITORY_NAMES[i];
+        div.appendChild(repoName);
 
         // currently the layout looks like <span><i>...
-        const elem_span = document.createElement("span");
-        const elem_i = document.createElement("i");
-        elem_span.appendChild(elem_i);
-        div.appendChild(elem_span);
+        const repoPinButton = document.createElement("button");
+        const repoPinButtonFAImage = document.createElement("i");
+
+        repoPinButton.appendChild(repoPinButtonFAImage);
+        div.appendChild(repoPinButton);
+
+        const repoExternalLink = document.createElement("a");
+        div.appendChild(repoExternalLink);
+
         list.appendChild(div);
     }
     document.body.appendChild(list);
@@ -47,20 +52,34 @@ function mockRepositoryFilter(): HTMLDivElement {
     return div;
 }
 
+function mockRepoRow(): HTMLButtonElement {
+    const div = document.createElement("div");
+    const repoName = document.createElement("a");
+    repoName.text = "myreponame";
+    div.appendChild(repoName);
+    const pinButton = document.createElement("button");
+    div.appendChild(pinButton);
+    const repoLink = document.createElement("a");
+    div.appendChild(repoLink);
+
+    document.body.appendChild(div);
+    return pinButton;
+}
+
 function getPinButtonClassNameFromRowDiv(parent_div: HTMLElement) {
-    return parent_div.children[1].children[0].className;
+    return parent_div.children[1].className;
 }
 describe('Pinning repositories', () => {
     let repository_mock: Mock;
-    let list: HTMLDivElement;
-    let filter: HTMLDivElement;
+    let repositoryList: HTMLDivElement;
+    let repositoryFilter: HTMLDivElement;
     beforeEach(() => {
         // the window in jsdom doesn't have localStorage by default
         // 'as any' basically disables TypeScript type checking
         // https://github.com/Microsoft/TypeScript/issues/9448#issuecomment-324015051
         (window as any).localStorage = new LocalStorageMock();
-        list = mockRepositoryList();
-        filter = mockRepositoryFilter();
+        repositoryList = mockRepositoryList();
+        repositoryFilter = mockRepositoryFilter();
         repository_mock = new Mock();
         repository_mock.set(Repositories, Repositories.retrieve);
     });
@@ -68,42 +87,41 @@ describe('Pinning repositories', () => {
         // it is important to wipe the HTML from the page after each test
         // or other tests might be affected
         document.body.innerHTML = "";
-        list = null;
+        repositoryList = null;
         repository_mock.restore();
     });
     it('should pin a repository when clicked the first time', () => {
-        const id = 1;
-        Pinned.toggle(id);
+        const mockRow = mockRepoRow();
+        Pinned.toggle(mockRow);
         // the filter input should have been cleared
         // first children[0]
-        expect((<HTMLInputElement>filter.children[0]).value).to.be.empty;
-        const pinned_repo = document.getElementById(Repositories.ID_REPO_PREFIX + id);
+        expect((<HTMLInputElement>repositoryFilter.children[0]).value).to.be.empty;
         // some class name should have been added, originally in the mock it is empty
-        expect(getPinButtonClassNameFromRowDiv(pinned_repo)).to.not.be.empty;
+        expect(mockRow.className).to.not.be.empty;
         expect(repository_mock.called.once()).to.be.true;
     });
     it('should unpin a repository when clicked the second time', () => {
-        const id = 1;
-        Pinned.toggle(id);
+        const mockRow = mockRepoRow();
+        Pinned.toggle(mockRow);
         // the filter input should have been cleared
-        expect((<HTMLInputElement>filter.children[0]).value).to.be.empty;
-        const pinned_repo = document.getElementById(Repositories.ID_REPO_PREFIX + id);
+        expect((<HTMLInputElement>repositoryFilter.children[0]).value).to.be.empty;
         // some class name should have been added to change the pin icon, originally in the mock it is empty
-        const first_click_class = getPinButtonClassNameFromRowDiv(pinned_repo);
+        const first_click_class = mockRow.className;
         expect(first_click_class).to.not.be.empty;
 
-        Pinned.toggle(id);
+        Pinned.toggle(mockRow);
         // the class should have changed, as the repository's pinned status has been changed
-        expect(getPinButtonClassNameFromRowDiv(pinned_repo)).to.not.equal(first_click_class);
+        expect(mockRow.className).to.not.equal(first_click_class);
         expect(repository_mock.called.twice()).to.be.true;
     })
     it('should put pinned repositories on top', () => {
         // pin the last repository
         const last_id = REPOSITORY_COUNT - 1;
-        Pinned.toggle(last_id);
+        const toggledElement = <HTMLButtonElement>repositoryList.children[last_id].children[1];
+        Pinned.toggle(toggledElement);
         // reorder the rows so that the pinned ones are on top
         // error: not iterable
-        const rows = Pinned.reorder(<Array<HTMLDivElement>>Array.from(list.childNodes));
+        const rows = Pinned.reorder(<Array<HTMLDivElement>>Array.from(repositoryList.childNodes));
         // we pinned the last repository, which should have been moved to be first when pinned
         const first_row = rows[0];
         // check that the class was changed
@@ -114,9 +132,11 @@ describe('Pinning repositories', () => {
     it('should put all pinned repositories on top', () => {
         // pin the last repository
         const last_id = REPOSITORY_COUNT - 1;
-        Pinned.toggle(last_id);
-        Pinned.toggle(last_id - 1);
-        const rows = Pinned.reorder(<Array<HTMLDivElement>>Array.from(list.childNodes));
+        let toggledElement = <HTMLButtonElement>repositoryList.children[last_id].children[1];
+        Pinned.toggle(toggledElement);
+        toggledElement = <HTMLButtonElement>repositoryList.children[last_id - 1].children[1];
+        Pinned.toggle(toggledElement);
+        const rows = Pinned.reorder(<Array<HTMLDivElement>>Array.from(repositoryList.childNodes));
 
         // the pinned repositories should now be the first two
         const first_row = rows[0];
