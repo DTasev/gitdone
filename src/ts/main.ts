@@ -3,6 +3,7 @@ import Github from './github';
 import Repositories from './section/repositories';
 import Issues from './section/issues';
 import Milestones from './section/milestones';
+import PullRequests from './section/pull_requests'
 
 // Global objects, accessible to the HTML
 import Pinned from './section/pinManager';
@@ -19,12 +20,13 @@ $("#api-key").on('change', function () {
 });
 
 document.onreadystatechange = (ev) => {
-    if (document.readyState == "complete") {
-        document.getElementById("api-key").click();
-        Repositories.retrieve();
-    }
+    // if (document.readyState == "complete") {
+    //     document.getElementById("api-key").click();
+    //     Repositories.retrieve();
+    // }
+    PullRequests.retrieve(true);
 }
 
 $(window).on('hashchange', function () {
-    Issues.retrieve(true);
+    // Issues.retrieve(true);
 });

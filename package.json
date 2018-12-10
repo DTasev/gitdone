@@ -8,13 +8,13 @@
         "@types/chai": "^4.1.2",
         "@types/jquery": "^3.3.1",
         "@types/mocha": "^2.2.48",
-        "jquery": "^3.3.1",
-        "parallelshell": "^3.0.2",
         "chai": "^4.1.2",
         "clean-webpack-plugin": "^0.1.18",
+        "jquery": "^3.3.1",
         "jsdom": "^11.6.2",
         "jsdom-global": "^3.0.2",
         "mocha": "^5.0.0",
+        "parallelshell": "^3.0.2",
         "ts-node": "^4.1.0",
         "typescript": "^2.7.1",
         "uglifyjs-webpack-plugin": "^1.1.8",
@@ -27,7 +27,7 @@
         "build:dev": "tsc && webpack --config webpack.dev.js",
         "ts:watch": "tsc --watch",
         "webpack:watch:dev": "webpack --config webpack.dev.js --watch",
-        "watch:all": "parallelshell \"npm run ts:watch\" \"npm run webpack:watch:dev\""
+        "watch:all": "parallelshell 'npm run ts:watch' 'npm run webpack:watch:dev'"
     },
     "repository": {
         "type": "git",

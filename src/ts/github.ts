@@ -17,7 +17,7 @@ export default class Github {
     }
 
     /**
-     * 
+     *
      * @param response The HTTP Response from the server
      * @param expected_code The expected HTTP code for a successful end
      * @param callback Callback function
@@ -40,14 +40,14 @@ export default class Github {
 
     public static GET(url: string, callback: ResponseCallbackFunction) {
         let request = new XMLHttpRequest();
-        const api_key = $("#api-key input").val();
-        if (api_key === "") {
-            $("#error-message").html("No API key");
-            return;
-        }
-        const auth_basic = window.btoa($("#username input").val() + ":" + $("#api-key input").val());
+        // const api_key = $("#api-key input").val();
+        // if (api_key === "") {
+        //     $("#error-message").html("No API key");
+        //     return;
+        // }
+        // const auth_basic = window.btoa($("#username input").val() + ":" + $("#api-key input").val());
         request.open("GET", url, true);
-        request.setRequestHeader("Authorization", "Basic " + auth_basic);
+        // request.setRequestHeader("Authorization", "Basic " + auth_basic);
         request.onreadystatechange = function () {
             // expecting 200 OK
             Github.handleResponse(request, 200, callback);
@@ -73,7 +73,7 @@ export default class Github {
         request.send(data);
     }
 
-    private static showConnectionError(): (this: XMLHttpRequest, ev: ErrorEvent) => any {
+    private static showConnectionError(): (this: XMLHttpRequest, ev: ProgressEvent | ErrorEvent) => any {
         return (e) => {
             const elem = document.getElementById("issues-error");
             elem.innerHTML = '<div class="w3-panel w3-red w3-padding" style="width:100%"> Coudln\'t reach remote.</div>';

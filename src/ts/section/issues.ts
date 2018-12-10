@@ -9,7 +9,7 @@ import { IS_MOBILE } from '../util';
 
 export default class Issues {
     static readonly ID_NEW_ISSUE_SEND_BUTTON = "issue-submit-button";
-    static readonly ID_ISSUE_LIST = "issues-list";
+    static readonly ID_ISSUE_LIST = "data-list";
     static readonly ID_NEW_ISSUE_TITLE = "new-issue-title";
     static readonly ID_NEW_ISSUE_DETAILS = "new-issue-body";
     static readonly ID_NEW_ISSUE_MILESTONES_BUTTON = "new-issue-milestones-button";

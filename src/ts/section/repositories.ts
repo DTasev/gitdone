@@ -16,6 +16,7 @@ export default class Repositories {
     static ID_REPO_FILTER = "repo-filter";
     static ID_REPOSITORY_LIST = "repository-list";
     static ID_DISPLAY_REPOSITORY_NAME = "display-repo-name";
+    static ID_DISPLAY_PAGE_NAME = "display-page";
     static repo_cache = null;
 
     /**
@@ -89,7 +90,7 @@ export default class Repositories {
                         }]
                     }
                 }, {
-                    // the link that opens the page in github    
+                    // the link that opens the page in github
                     "a": {
                         "href": repository["html_url"],
                         "target": "_blank",
