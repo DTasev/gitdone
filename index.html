@@ -1,12 +1,15 @@
 <!DOCTYPE html>
 <html>
-<title>Gitdone Quick</title>
+<title>QuickHub</title>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <!-- online: https://www.w3schools.com/w3css/4/w3.css -->
 <link rel="stylesheet" href="css/w3.css">
 <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Raleway">
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+<!-- <link href="https://use.fontawesome.com/releases/v5.0.6/css/all.css" rel="stylesheet"> -->
+<link rel="shortcut icon" type="image/png" href="img/quickhub.png" />
+
+<script src="src/fa-qh.js"></script>
 <link rel="stylesheet" href="css/style.css">
 <style>
     body,
@@ -26,11 +29,13 @@
         <div class="w3-container">
             <div class="w3-row">
                 <div class="w3-col s2 m2 l2 w3-dropdown-click margin-top-1em">
-                    <button onclick="showRepositoryOptions()" class="w3-button w3-white full-width"><i class="fa fa-ellipsis-v fa-2x" aria-hidden="true"></i></button>
+                    <button onclick="Controls.toggleRepositoryOptions()" class="w3-button w3-white full-width">
+                        <i class="fa fa-ellipsis-v fa-2x" aria-hidden="true"></i>
+                    </button>
                     <div id="repository-options" class="w3-dropdown-content w3-bar-block w3-border">
-                        <a href="#" class="w3-bar-item w3-button" onclick="showRepositoryOptions()">Link 1</a>
-                        <a href="#" class="w3-bar-item w3-button" onclick="showRepositoryOptions()">Link 2</a>
-                        <a href="#" class="w3-bar-item w3-button" onclick="showRepositoryOptions()">Link 3</a>
+                        <a class="w3-bar-item w3-button" onclick="Controls.showCredentials()">Show credentials</a>
+                        <a class="w3-bar-item w3-button" onclick="Controls.toggleRepositoryOptions()">Link 2</a>
+                        <a class="w3-bar-item w3-button" onclick="Controls.toggleRepositoryOptions()">Link 3</a>
                     </div>
                 </div>
                 <div class="w3-col s10 m10 l10">
@@ -41,7 +46,7 @@
             </div>
         </div>
         <div class="w3-container">
-            <form action="">
+            <form id="user-credential-form" action="">
                 <div id="username">
                     <input class="w3-input w3-border" type="text" placeholder="Username" value="DTasev" name="username" />
                 </div>
@@ -57,67 +62,57 @@
             </div>
             <div id="error-message" class="w3-row"></div>
         </div>
-            <div id="repository-list" class="w3-bar-block">
-            </div>
+        <div id="repository-list" class="w3-bar-block">
+        </div>
         <div class="w3-panel w3-large">
-            <a href="https://www.github.com/dtasev/gitdone" target="_blank" class="out-link">
-                <i class="fa fa-github w3-hover-opacity">
+            <a href="https://www.github.com/dtasev/quickhub" target="_blank" class="out-link">
+                <i class="fab fa-github w3-hover-opacity">
                 </i>
             </a>
             <a href="https://www.linkedin.com/in/dtasev/" target="_blank" class="out-link">
-                <i class="fa fa-linkedin w3-hover-opacity">
+                <i class="fab fa-linkedin w3-hover-opacity">
                 </i>
             </a>
         </div>
     </nav>
 
     <!-- Overlay effect when opening sidebar on small screens -->
-    <div class="w3-overlay w3-hide-large w3-animate-opacity" onclick="w3_close()" style="cursor:pointer" title="close side menu"
+    <div class="w3-overlay w3-hide-large w3-animate-opacity" onclick="Controls.w3_close()" style="cursor:pointer" title="close side menu"
         id="myOverlay"></div>
 
     <!-- !PAGE CONTENT! -->
     <div class="w3-main" style="margin-left:300px">
-
         <!-- Header -->
         <header id="portfolio">
-            <a href="#">
-                <img src="/w3images/avatar_g2.jpg" style="width:65px;" class="w3-circle w3-right w3-margin w3-hide-large w3-hover-opacity">
-            </a>
-            <span class="w3-button w3-hide-large w3-xxlarge w3-hover-text-grey" onclick="w3_open()">
-                <i class="fa fa-bars"></i>
+            <span class="w3-button w3-hide-large w3-xxlarge w3-hover-text-grey" onclick="Controls.w3_open()">
+                <i class="fas fa-bars"></i>
             </span>
             <div class="w3-container">
                 <h1>
-                    <b>Issues</b>
-                    <span hidden id="loading-icon"><i class="fa fa-spinner fa-pulse fa-fw"></i></span>
+                    <b id="display-page">Issues</b>
+                    <b id="display-repo-name"></b>
+                    <span hidden id="loading-icon">
+                        <i class="fa fa-spinner fa-pulse fa-fw"></i>
+                    </span>
                 </h1>
-                <div class="w3-section w3-bottombar w3-padding-16">
-                    <span class="w3-margin-right">Filter:</span>
-                    <button class="w3-button w3-black">ALL</button>
-                    <button class="w3-button w3-white">
-                        <i class="fa fa-tencent-weibo w3-margin-right"></i>MINE</button>
-                    <!-- <button class="w3-button w3-white w3-hide-small">
-                        <i class="fa fa-photo w3-margin-right"></i>Photos</button>
-                    <button class="w3-button w3-white w3-hide-small">
-                        <i class="fa fa-map-pin w3-margin-right"></i>Art</button> -->
+                <div class="w3-row w3-bottombar w3-padding-16">
+                    <div id="filter-options" style="display:inline-block">
+                    </div>
+                    <div class="w3-button fa-2x" style="display:inline-block">
+                        <span id="reload-button" onclick="Controls.refreshIssues()">
+                            <i class="fas fa-sync"></i>
+                        </span>
+                    </div>
+                    <div id="issues-error"></div>
                 </div>
             </div>
         </header>
         <!-- Issues list, built dynamically from javascript -->
-        <div id="issues-list" class="w3-container">
+        <div id="data-list" class="w3-container">
         </div>
         <!-- End page content -->
     </div>
-
-    <script src="js/lib/jquery-3.2.1.js "></script>
-    <script src="js/src/site-controls.js"></script>
-    <script src="js/src/load-icon.js "></script>
-    <script src="js/src/pin-manager.js "></script>
-    <script src="js/src/github.js "></script>
-    <script src="js/src/image-urls.js "></script>
-    <script src="js/src/issues.js "></script>
-    <script src="js/src/repositories.js "></script>
-    <script src="js/src/main.js "></script>
+    <script src="dist/bundle.js"></script>
 </body>
 
 </html>

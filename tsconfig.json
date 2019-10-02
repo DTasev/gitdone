@@ -1,0 +1,12 @@
+{
+    "include": [
+        "./src/ts/*"
+    ],
+    "compilerOptions": {
+        "target": "es6",
+        "module": "es6",
+        "sourceMap": true,
+        "outDir": "./src/build/",
+        "alwaysStrict": true
+    }
+}
