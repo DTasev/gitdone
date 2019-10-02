@@ -1,21 +1,28 @@
 // * as $ allows ts-node to compile to commonjs and run the tests for this module
-import * as $ from "../lib/jquery-3.2.1";
-import Github from './github';
-import Pinned from './pin-manager';
-import CredentialForm from './credential-form';
+import * as $ from "jquery";
+import { J2H } from "../json2html";
+
+import Github from '../github';
+import Pinned from './pinManager';
 import Issues from './issues';
 import Milestones from './milestones';
-import { P } from "./parser";
-import Controls from "./site-controls";
-import { Filter } from "./filter-options";
+import Controls from "../siteControls";
+import Filter from "./filter";
+
+import { CredentialForm } from '../item/credentialForm';
 
 export default class Repositories {
     static ID_REPO_PREFIX = "repo_";
     static ID_REPO_FILTER = "repo-filter";
     static ID_REPOSITORY_LIST = "repository-list";
     static ID_DISPLAY_REPOSITORY_NAME = "display-repo-name";
+    static ID_DISPLAY_PAGE_NAME = "display-page";
     static repo_cache = null;
 
+    /**
+     * Retrieve and display the repositories
+     * @param use_cached whether to use cached data for the repositories, if such data is present
+     */
     static retrieve(use_cached: boolean = false) {
         if (use_cached && Repositories.repo_cache) {
             // Don't query github for the repositories, and use the cache
@@ -58,11 +65,10 @@ export default class Repositories {
 
     private static buildRow(id, repository) {
         const button_classes: string = "w3-button w3-padding w3-hover-opacity w3-col s2 m2 l2";
-        const div: HTMLDivElement = <HTMLDivElement>P.json2html({
+        const div: HTMLDivElement = J2H.parse<HTMLDivElement>({
             // element for the row
             "div": {
                 "className": "w3-row",
-                "id": Repositories.ID_REPO_PREFIX + id,
                 "children": [{
                     // the link that can be clicked to load the repository's issues
                     "a": {
@@ -74,24 +80,24 @@ export default class Repositories {
                 }, {
                     // pin button
                     "button": {
-                        "onclick": "Pinned.toggle(" + id + ")",
+                        "onclick": "Pinned.toggle(this)",
                         "className": button_classes,
                         "children": [{
                             "i": {
-                                "className": 'fas fa-thumbtack',
+                                "className": 'fa fa-thumbtack',
                                 "aria-hidden": true
                             }
                         }]
                     }
                 }, {
-                    // the link that opens the page in github    
+                    // the link that opens the page in github
                     "a": {
                         "href": repository["html_url"],
                         "target": "_blank",
                         "className": button_classes,
                         "children": [{
                             "i": {
-                                "className": "fas fa-external-link-alt",
+                                "className": "fa fa-external-link-alt",
                                 "aria-hidden": true
                             }
                         }]
@@ -103,12 +109,13 @@ export default class Repositories {
     }
 
     static filterRepositories(e) {
-        const filter_string = $("#" + Repositories.ID_REPO_FILTER + " input").val().toLowerCase();
+        const filter_string = ($("#" + Repositories.ID_REPO_FILTER + " input").val() + "").toLowerCase();
         const repo_row_tag = "#" + Repositories.ID_REPOSITORY_LIST + " .w3-row";
 
         if (filter_string.length > 0) {
             $(repo_row_tag).each(function (i, v) {
-                if (v.children[0].text.indexOf(filter_string) == -1) {
+                let repo_name = <HTMLAnchorElement>v.children[0];
+                if (repo_name.text.toLowerCase().indexOf(filter_string) == -1) {
                     $(this).hide();
                 } else {
                     $(this).show();

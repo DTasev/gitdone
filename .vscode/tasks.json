@@ -24,6 +24,29 @@
             "type": "npm",
             "script": "build-prod",
             "problemMatcher": []
+        },
+        {
+            "type": "npm",
+            "script": "build:prod",
+            "problemMatcher": [
+                "$tsc"
+            ]
+        },
+        {
+            "type": "npm",
+            "script": "watch:all",
+            "problemMatcher": [
+                "$tsc-watch"
+            ],
+            "isBackground": true
+        },
+        {
+            "type": "npm",
+            "script": "ts:watch",
+            "problemMatcher": [
+                "$tsc-watch"
+            ],
+            "isBackground": true
         }
     ]
 }

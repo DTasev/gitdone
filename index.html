@@ -6,10 +6,10 @@
 <!-- online: https://www.w3schools.com/w3css/4/w3.css -->
 <link rel="stylesheet" href="css/w3.css">
 <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Raleway">
-<link href="https://use.fontawesome.com/releases/v5.0.6/css/all.css" rel="stylesheet">
-<link rel="shortcut icon" type="image/png" href="img/quickhub.png"/>
+<!-- <link href="https://use.fontawesome.com/releases/v5.0.6/css/all.css" rel="stylesheet"> -->
+<link rel="shortcut icon" type="image/png" href="img/quickhub.png" />
 
-
+<script src="src/fa-qh.js"></script>
 <link rel="stylesheet" href="css/style.css">
 <style>
     body,
@@ -29,7 +29,9 @@
         <div class="w3-container">
             <div class="w3-row">
                 <div class="w3-col s2 m2 l2 w3-dropdown-click margin-top-1em">
-                    <button onclick="Controls.toggleRepositoryOptions()" class="w3-button w3-white full-width"><i class="fa fa-ellipsis-v fa-2x" aria-hidden="true"></i></button>
+                    <button onclick="Controls.toggleRepositoryOptions()" class="w3-button w3-white full-width">
+                        <i class="fa fa-ellipsis-v fa-2x" aria-hidden="true"></i>
+                    </button>
                     <div id="repository-options" class="w3-dropdown-content w3-bar-block w3-border">
                         <a class="w3-bar-item w3-button" onclick="Controls.showCredentials()">Show credentials</a>
                         <a class="w3-bar-item w3-button" onclick="Controls.toggleRepositoryOptions()">Link 2</a>
@@ -60,8 +62,8 @@
             </div>
             <div id="error-message" class="w3-row"></div>
         </div>
-            <div id="repository-list" class="w3-bar-block">
-            </div>
+        <div id="repository-list" class="w3-bar-block">
+        </div>
         <div class="w3-panel w3-large">
             <a href="https://www.github.com/dtasev/quickhub" target="_blank" class="out-link">
                 <i class="fab fa-github w3-hover-opacity">
@@ -80,33 +82,37 @@
 
     <!-- !PAGE CONTENT! -->
     <div class="w3-main" style="margin-left:300px">
-
         <!-- Header -->
         <header id="portfolio">
-            <a href="#">
-                <img src="/w3images/avatar_g2.jpg" style="width:65px;" class="w3-circle w3-right w3-margin w3-hide-large w3-hover-opacity">
-            </a>
             <span class="w3-button w3-hide-large w3-xxlarge w3-hover-text-grey" onclick="Controls.w3_open()">
                 <i class="fas fa-bars"></i>
             </span>
             <div class="w3-container">
                 <h1>
-                    <b>Issues</b>
+                    <b id="display-page">Issues</b>
                     <b id="display-repo-name"></b>
-                    <span hidden id="loading-icon"><i class="fa fa-spinner fa-pulse fa-fw"></i></span>
+                    <span hidden id="loading-icon">
+                        <i class="fa fa-spinner fa-pulse fa-fw"></i>
+                    </span>
                 </h1>
-                <div id="filter-options" class="w3-section w3-bottombar w3-padding-16">
-                    <span class="w3-margin-right">Filter:</span>
+                <div class="w3-row w3-bottombar w3-padding-16">
+                    <div id="filter-options" style="display:inline-block">
+                    </div>
+                    <div class="w3-button fa-2x" style="display:inline-block">
+                        <span id="reload-button" onclick="Controls.refreshIssues()">
+                            <i class="fas fa-sync"></i>
+                        </span>
+                    </div>
+                    <div id="issues-error"></div>
                 </div>
             </div>
         </header>
         <!-- Issues list, built dynamically from javascript -->
-        <div id="issues-list" class="w3-container">
+        <div id="data-list" class="w3-container">
         </div>
         <!-- End page content -->
     </div>
-
-    <script src="src/dist/bundle.js "></script>
+    <script src="dist/bundle.js"></script>
 </body>
 
 </html>

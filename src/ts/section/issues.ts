@@ -1,26 +1,54 @@
 // * as $ allows ts-node to compile to commonjs and run the tests for this module
-import * as $ from "../lib/jquery-3.2.1";
-import Github from './github';
+import * as $ from "jquery";
+import Github from '../github';
 import Milestones from './milestones';
 import Repositories from './repositories';
-import { P } from "./parser";
-import { Filter } from "./filter-options";
+import { J2H } from "../json2html";
+import Filter from "./filter";
+import { IS_MOBILE } from '../util';
 
 export default class Issues {
-    static readonly ID_ISSUE_LIST = "issues-list";
+    static readonly ID_NEW_ISSUE_SEND_BUTTON = "issue-submit-button";
+    static readonly ID_ISSUE_LIST = "data-list";
     static readonly ID_NEW_ISSUE_TITLE = "new-issue-title";
     static readonly ID_NEW_ISSUE_DETAILS = "new-issue-body";
     static readonly ID_NEW_ISSUE_MILESTONES_BUTTON = "new-issue-milestones-button";
     static readonly ID_NEW_ISSUE_MILESTONES_LIST = "new-issue-milestones-list";
 
-    static retrieve() {
-        if (window.location.hash.length > 1) {
-            const repository_url = Issues.makeIssuesUrl(window.location.hash) + "?" + Filter.option();
+    // by default do not download the issues on mobile, just build the input and show the option to DL everything
+    static downloadOnMobile = !IS_MOBILE;
+
+    static retrieve(allowCache = false) {
+        if (this.downloadOnMobile && window.location.hash.length > 1) {
+            const repository_url = `${this.makeIssuesUrl(window.location.hash)}` + (allowCache ? "" : `?${Filter.option()}+_=${new Date().getTime()}`);
             // substring removes the hash from the string, as window.location.hash gives bach #Username/reponame
             // this fully replaces the HTML in the element, as it's usually empty or has another repository's name
-            document.getElementById(Repositories.ID_DISPLAY_REPOSITORY_NAME).innerHTML = " - " + window.location.hash.substring(1);
-            Github.GET(repository_url, Issues.show);
+            Github.GET(repository_url, this.show);
+        } else {
+            this.showOnlyInput();
         }
+        document.getElementById(Repositories.ID_DISPLAY_REPOSITORY_NAME).innerHTML = " - " + window.location.hash.substring(1);
+    }
+    static showOnlyInput() {
+        const elem = document.getElementById(Issues.ID_ISSUE_LIST);
+        elem.innerHTML = Issues.buildInput().outerHTML;
+        // TODO add button load all that will override the IS_MOBILE check;
+        Issues.addIssueInputEvents();
+        const d_checkbox = {
+            div: {
+                className: "w3-row w3-dark-grey issue-margin-bottom",
+                children: [{
+                    button: {
+                        className: "w3-padding w3-button w3-white w3-border",
+                        style: "width:100%",
+                        type: "button",
+                        textContent: "Download all issues (will use data!)",
+                        onclick: function () { Issues.downloadOnMobile = !Issues.downloadOnMobile; Issues.retrieve() }
+                    }
+                }]
+            }
+        }
+        elem.appendChild(J2H.parse(d_checkbox));
     }
 
     static show(issues) {
@@ -29,26 +57,21 @@ export default class Issues {
         elem.innerHTML = Issues.buildInput().outerHTML + all_issues_html;
 
         // add Enter key triggers for creating an new issue
-        const jquery_id_issue_title = "#" + Issues.ID_NEW_ISSUE_TITLE;
-        const jquery_id_issue_details = "#" + Issues.ID_NEW_ISSUE_DETAILS;
-
-        $(jquery_id_issue_title).bind("enterKey", Issues.createNewIssue);
-        $(jquery_id_issue_title).keyup(function (e: KeyboardEvent) {
-            if (e.keyCode == 13 && !(e.shiftKey || e.ctrlKey)) {
-                $(this).trigger("enterKey");
-            }
-        });
-
-        $(jquery_id_issue_details).bind("enterKey", Issues.createNewIssue);
-        $(jquery_id_issue_details).keyup(function (e: KeyboardEvent) {
-            if (e.keyCode == 13 && !(e.shiftKey || e.ctrlKey)) {
-                $(this).trigger("enterKey");
-            }
-        });
-
+        Issues.addIssueInputEvents();
         // milestones must be retrieved after the issues HTML has been built
         // otherwise it will fail to find the button where the milestones have to be placed
         Milestones.retrieve();
+    }
+
+    private static addIssueInputEvents() {
+        const createNewIssueOnEnter = (e) => {
+            if (e.keyCode == 13 && !(e.shiftKey || e.ctrlKey)) {
+                Issues.createNewIssue();
+            }
+        };
+        document.getElementById(Issues.ID_NEW_ISSUE_TITLE).onkeydown = createNewIssueOnEnter;
+        document.getElementById(Issues.ID_NEW_ISSUE_DETAILS).onkeydown = createNewIssueOnEnter;
+        document.getElementById(Issues.ID_NEW_ISSUE_SEND_BUTTON).onclick = () => { Issues.createNewIssue(); };
     }
 
     private static makeIssuesUrl(hash) {
@@ -102,13 +125,19 @@ export default class Issues {
                         "id": Issues.ID_NEW_ISSUE_DETAILS,
                         "placeholder": "Details (Optional)"
                     }
+                }, {
+                    button: {
+                        className: "w3-button w3-border w3-white w3-right w3-margin-top",
+                        textContent: "Send",
+                        id: Issues.ID_NEW_ISSUE_SEND_BUTTON
+                    }
                 }]
             }
         };
 
-        const outer_div: HTMLElement = P.json2html(outer_div_desc);
+        const outer_div = J2H.parse<HTMLElement>(outer_div_desc);
 
-        const new_issue_options = P.json2html({
+        const new_issue_options = J2H.parse({
             "div": {
                 "className": "w3-dropdown-click margin-top-1em"
             }
@@ -131,7 +160,7 @@ export default class Issues {
      */
     private static buildRow(issue) {
         // div for the whole row
-        const row = P.json2html({
+        const row = J2H.parse({
             "div": {
                 "className": "w3-row w3-dark-grey issue-margin-bottom"
             }
@@ -139,7 +168,7 @@ export default class Issues {
 
         const link_class_names = "issue-link w3-text-sand w3-padding w3-block w3-ripple w3-hover-green";
 
-        const issue_col = P.json2html({
+        const issue_col = J2H.parse({
             "div": {
                 "children": [{
                     "a": {
@@ -153,6 +182,7 @@ export default class Issues {
             }
         })
 
+        // if there is someone assigned to the issue, then add their name
         if (issue["assignees"].length !== 0) {
             issue_col.className = "w3-col s9 m9 l10";
             // add the issue name column first, the following ones will appear on its left
@@ -166,10 +196,9 @@ export default class Issues {
                 assignee_link_title = issue["assignees"].slice(2).reduce((previous: string, current) => previous + ", " + current["login"], issue["assignees"][1]["login"]);
             }
 
-            // const assignee_col = document.createElement("div");
             const assignee_col = {
                 "div": {
-                    "className": "w3-col s3 m3 l2",
+                    "className": "w3-col s3 m3 l2 w3-center",
                     "children": [{
                         "a": {
                             "href": issue["assignees"][0]["html_url"],
@@ -181,7 +210,7 @@ export default class Issues {
                 }
             };
 
-            row.appendChild(P.json2html(assignee_col));
+            row.appendChild(J2H.parse(assignee_col));
         } else {
             row.appendChild(issue_col);
         }

@@ -1,6 +1,6 @@
-import CredentialForm from './credential-form';
-import Issues from './issues';
-import Milestones from './milestones';
+import { CredentialForm } from './item/credentialForm';
+import Issues from './section/issues';
+import Milestones from './section/milestones';
 
 export default class Controls {
 
@@ -36,5 +36,9 @@ export default class Controls {
 
     static markActiveMilestone(id: number) {
         Milestones.markActiveMilestone(id);
+    }
+
+    static refreshIssues() {
+        Issues.retrieve();
     }
 }

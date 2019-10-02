@@ -1,4 +1,4 @@
-import * as $ from "../lib/jquery-3.2.1";
+import * as $ from "jquery";
 import Repositories from './repositories';
 
 export default class Pinned {
@@ -38,11 +38,10 @@ export default class Pinned {
 
     /**
      * Toggle pinned status of the repository.
-     * @param id ID in the repository list, not to be confused with the remote ID of the repository
+     * @param elem The HTML Element of the repository that should be pinned
      */
-    static toggle(id) {
-        const full_id = "#" + Repositories.ID_REPO_PREFIX + id;
-        const chosen_repo = $(full_id + " a")[0].text;
+    static toggle(elem: HTMLButtonElement) {
+        const chosen_repo = (<HTMLAnchorElement>elem.parentElement.children[0]).text;
         const pinned_repositories = Pinned.get();
 
         // use the comma-separated string returned by get
@@ -51,10 +50,10 @@ export default class Pinned {
         // with the coma - "dawdle-web," will not match "dawdle-web-secret,"
         if (!pinned_repositories || pinned_repositories.indexOf(chosen_repo + ',') == -1) {
             Pinned.add(chosen_repo);
-            $(full_id + " i")[0].className = 'fa fa-thumb-tack';
+            elem.className = 'fa fa-thumb-tack';
         } else {
             Pinned.remove(chosen_repo);
-            $(full_id + " i")[0].className = 'fa fa-check';
+            elem.className = 'fa fa-check';
         }
         // refresh the repository list using cached repositories
         Repositories.retrieve(true);

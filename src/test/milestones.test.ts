@@ -1,8 +1,8 @@
 import { expect, assert } from 'chai';
 import 'mocha';
 
-import Milestones from "../ts/milestones";
-import Issues from "../ts/issues";
+import Milestones from "../ts/section/milestones";
+import Issues from "../ts/section/issues";
 import Github from "../ts/github";
 
 /**

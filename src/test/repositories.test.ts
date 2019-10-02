@@ -2,13 +2,14 @@ import { expect } from 'chai';
 import 'mocha';
 
 import Mock from './mock';
-import Issues from "../ts/issues";
+import Issues from "../ts/section/issues";
 import Github from "../ts/github";
-import Pinned from "../ts/pin-manager";
-import Milestones from "../ts/milestones";
-import Repositories from "../ts/repositories";
-import CredentialForm from '../ts/credential-form';
-import { Filter } from '../ts/filter-options';
+import Pinned from "../ts/section/pinManager";
+import Milestones from "../ts/section/milestones";
+import Repositories from "../ts/section/repositories";
+import Filter from '../ts/section/filter';
+
+import { CredentialForm } from '../ts/item/credentialForm';
 
 function mockData() {
     // very trimmed repository data, only the relevant fields are left
@@ -38,7 +39,7 @@ function mockRepositoryList(): HTMLElement {
 
 function mockFilters(): HTMLElement {
     const div = document.createElement("div");
-    div.id = Filter.ID_FILTER_OPTIONS;
+    div.id = Filter.ID;
     document.body.appendChild(div);
     return div;
 }
@@ -79,7 +80,6 @@ describe('Repositories', () => {
         // we have added only 2 repositories
         expect(this.list.childElementCount).to.equal(2);
         for (const [id, repo] of this.list.childNodes.entries()) {
-            expect(repo.id).to.equal(Repositories.ID_REPO_PREFIX + id);
             // there should be the repo name, pin and external link
             expect(repo.childElementCount).to.equal(3);
         }
@@ -92,7 +92,6 @@ describe('Repositories', () => {
         // should show the same thing
         expect(this.list.childElementCount).to.equal(2);
         for (const [id, repo] of this.list.childNodes.entries()) {
-            expect(repo.id).to.equal(Repositories.ID_REPO_PREFIX + id);
             // there should be the repo name, pin and external link
             expect(repo.childElementCount).to.equal(3);
         }

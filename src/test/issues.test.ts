@@ -2,10 +2,10 @@ import { expect, assert } from 'chai';
 import 'mocha';
 
 import Mock from './mock';
-import Issues from "../ts/issues";
+import Issues from "../ts/section/issues";
 import Github from "../ts/github";
-import Milestones from "../ts/milestones";
-import Repositories from "../ts/repositories";
+import Milestones from "../ts/section/milestones";
+import Repositories from "../ts/section/repositories";
 
 const ISSUE_1_BODY = "I eat apples";
 const ISSUE_2_BODY = "Oranges are orange";
@@ -140,7 +140,7 @@ describe('Issues', () => {
         const input_fields: HTMLElement = <HTMLElement>list.children[0];
 
         // just checking that the elements necessary for the milestones are correctly added
-        const milestones_div = input_fields.children[2];
+        const milestones_div = input_fields.children[3];
         const milestones_button = milestones_div.children[0];
         const milestones_list = milestones_div.children[1];
 
@@ -149,6 +149,22 @@ describe('Issues', () => {
         // check that the milestones retrieve has been called
         expect(milestone_mock.called.once()).to.be.true;
     });
+    it('should have a Send button', () => {
+        Issues.retrieve();
+
+        // we expect 3 elements - 2 is the mock issue data, 1 is the input field
+        // Milestones.retrieve = mock.restore();
+        expect(list.childElementCount).to.equal(3);
+
+        // the first one will be the new issue input fields
+        const input_fields: HTMLElement = <HTMLElement>list.children[0];
+
+        // just checking that the elements necessary for the milestones are correctly added
+        const send_button = input_fields.children[2];
+
+        expect(send_button.id).to.equal(Issues.ID_NEW_ISSUE_SEND_BUTTON);
+
+    })
     it('should show issue detials as tooltip', () => {
         Issues.retrieve();
 
